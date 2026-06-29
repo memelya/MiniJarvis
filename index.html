@@ -6,33 +6,39 @@
   <title>Курс: Harness Engineering Guide</title>
   <style>
     :root {
-      --bg: #f4f7f6;
+      --bg: #f6f7f2;
+      --ink: #17211d;
+      --muted: #64706b;
       --panel: #ffffff;
-      --text: #18221f;
-      --muted: #5c6b66;
-      --line: #d7e2de;
-      --accent: #0f766e;
-      --accent-2: #b45309;
-      --soft: #e8f3f0;
-      --code: #101817;
-      --code-text: #e7f0ed;
-      --danger: #b91c1c;
+      --line: #d8ded7;
+      --green: #0f766e;
+      --red: #b42318;
+      --blue: #1d4ed8;
+      --amber: #b45309;
+      --soft-green: #e6f3ef;
+      --soft-blue: #e8efff;
+      --soft-amber: #fff4df;
+      --code: #111816;
+      --code-text: #e7f5ef;
+      --shadow: 0 14px 38px rgba(31, 41, 35, .09);
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
       background: var(--bg);
-      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .layout {
+    a { color: var(--green); font-weight: 800; text-decoration: none; }
+    p, li { line-height: 1.58; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .shell {
       display: grid;
-      grid-template-columns: 300px minmax(0, 1fr);
+      grid-template-columns: 308px minmax(0, 1fr);
       min-height: 100vh;
     }
 
@@ -40,102 +46,149 @@
       position: sticky;
       top: 0;
       height: 100vh;
-      padding: 24px;
-      border-right: 1px solid var(--line);
-      background: var(--panel);
       overflow: auto;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 22px;
     }
 
     main {
-      width: min(1120px, 100%);
-      padding: 34px;
+      width: min(1160px, 100%);
+      padding: 30px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: conic-gradient(from 180deg, var(--green), var(--blue), var(--amber), var(--green));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      box-shadow: var(--shadow);
+    }
+
+    .brand strong { display: block; font-size: 16px; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    .progressBox {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfa;
+      margin: 16px 0 18px;
+    }
+
+    .meter {
+      height: 10px;
+      border-radius: 999px;
+      background: #e7ece8;
+      overflow: hidden;
+      margin: 9px 0 6px;
+    }
+
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transition: width .2s ease;
+    }
+
+    .progressText { color: var(--muted); font-size: 13px; }
+
+    nav a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 7px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    nav a:hover { background: var(--soft-green); }
+
+    .hero {
+      min-height: 56vh;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(120deg, rgba(15,118,110,.94), rgba(29,78,216,.72)),
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,.46), transparent 28%),
+        linear-gradient(135deg, #0f766e, #1d4ed8 58%, #b45309);
+      color: #fff;
+      padding: clamp(24px, 5vw, 54px);
+      display: grid;
+      align-content: end;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 140px;
+      background-image:
+        linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,.25) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: .28;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 950;
+      opacity: .9;
     }
 
     h1 {
-      max-width: 940px;
-      margin: 0 0 16px;
-      font-size: clamp(34px, 5vw, 62px);
+      margin: 10px 0 14px;
+      max-width: 880px;
+      font-size: clamp(36px, 8vw, 74px);
       line-height: 1.02;
       letter-spacing: 0;
     }
 
-    h2 { margin: 0 0 12px; font-size: 28px; letter-spacing: 0; }
-    h3 { margin: 0 0 10px; font-size: 19px; letter-spacing: 0; }
-    p, li { line-height: 1.58; }
-    a { color: var(--accent); text-decoration: none; font-weight: 700; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-
-    .eyebrow {
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+    .lead {
+      max-width: 840px;
+      margin: 0;
+      font-size: clamp(17px, 2.4vw, 22px);
+      line-height: 1.45;
     }
 
-    .hero, .card, details, .practice {
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 26px;
+    }
+
+    .fact, .card, details, .practice, .quiz, .project, .diagram {
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
     }
 
-    .hero {
-      padding: 30px;
-      margin-bottom: 18px;
-      background:
-        linear-gradient(135deg, rgba(15, 118, 110, .10), rgba(180, 83, 9, .08)),
-        var(--panel);
-    }
+    .fact { padding: 15px; }
+    .fact b { display: block; font-size: 24px; }
+    .fact span { color: var(--muted); font-size: 13px; }
 
-    .muted { color: var(--muted); }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0 0;
-    }
-
-    .stat {
-      min-height: 96px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .72);
-    }
-
-    .stat strong { display: block; font-size: 24px; margin-bottom: 4px; }
-
-    .progress-shell {
-      height: 12px;
-      border-radius: 999px;
-      background: #dbe7e3;
-      overflow: hidden;
-      margin: 16px 0 8px;
-    }
-
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      transition: width .2s ease;
-    }
-
-    .nav {
-      display: grid;
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .nav a {
-      padding: 10px 12px;
-      border-radius: 8px;
-      color: var(--text);
-      background: #eef5f3;
-      font-weight: 800;
-    }
-
-    section { margin: 22px 0; }
+    section { margin: 30px 0; }
+    h2 { font-size: clamp(25px, 4vw, 38px); margin: 0 0 14px; letter-spacing: 0; }
+    h3 { margin: 0 0 10px; font-size: 19px; letter-spacing: 0; }
+    .sectionLead { color: var(--muted); max-width: 850px; margin-top: -4px; }
 
     .grid {
       display: grid;
@@ -143,413 +196,522 @@
       gap: 14px;
     }
 
-    .card, .practice { padding: 18px; }
-
-    .map {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
+    .card { padding: 18px; box-shadow: var(--shadow); }
+    .card p { margin: 8px 0 0; color: var(--muted); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--soft-green);
+      color: #075f58;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 10px;
     }
+    .badge.blue { background: var(--soft-blue); color: var(--blue); }
+    .badge.amber { background: var(--soft-amber); color: var(--amber); }
 
-    .node {
-      min-height: 94px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--soft);
-      font-weight: 800;
-    }
-
-    .node span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 1.35;
-    }
-
-    details {
-      margin: 12px 0;
-      overflow: hidden;
-    }
-
+    details { margin: 13px 0; overflow: hidden; }
     summary {
       cursor: pointer;
       padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      font-weight: 900;
-    }
-
-    .lesson-body { padding: 18px; }
-
-    .lesson-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 0 0 14px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #f1f5f9;
-      color: #334155;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .source-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0;
-      margin: 10px 0 0;
+      font-weight: 950;
       list-style: none;
-    }
-
-    .source-list a {
-      display: inline-flex;
-      min-height: 30px;
+      display: flex;
       align-items: center;
-      padding: 5px 9px;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:after { content: "+"; font-size: 22px; color: var(--green); }
+    details[open] summary:after { content: "-"; }
+    .moduleBody { padding: 0 18px 18px; }
+
+    .reading {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+    .reading a {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      color: var(--accent);
+      background: #fbfcfa;
+      border-radius: 999px;
+      padding: 6px 10px;
       font-size: 13px;
+      color: var(--ink);
     }
 
-    pre {
-      overflow: auto;
-      padding: 16px;
-      border-radius: 8px;
-      background: var(--code);
-      color: var(--code-text);
+    .cols {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    label {
+    .practice { padding: 15px; background: #fbfcfa; }
+    .practice strong { color: var(--green); }
+    .check {
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      margin: 10px 0;
-      line-height: 1.45;
+      padding: 8px 0;
+    }
+    .check input {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      margin-top: 2px;
+      accent-color: var(--green);
     }
 
-    input[type="checkbox"], input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      accent-color: var(--accent);
-      flex: 0 0 auto;
+    pre {
+      margin: 12px 0 0;
+      padding: 14px;
+      border-radius: 8px;
+      background: var(--code);
+      color: var(--code-text);
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .diagram {
+      padding: 20px;
+      background: linear-gradient(180deg, #fff, #f7faf8);
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+    .node {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      min-height: 106px;
+    }
+    .node b { display: block; margin-bottom: 6px; }
+    .node span { color: var(--muted); font-size: 13px; }
+
+    .quiz, .project { padding: 18px; }
+    .question {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .question:first-child { border-top: 0; padding-top: 0; }
+    .question label {
+      display: block;
+      margin: 8px 0;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fbfcfa;
+    }
+    .result {
+      margin-top: 12px;
+      font-weight: 950;
+      color: var(--green);
     }
 
     button {
       border: 0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 900;
+      border-radius: 7px;
+      padding: 11px 14px;
+      background: var(--green);
+      color: white;
+      font-weight: 950;
       cursor: pointer;
     }
+    button.secondary { background: #26332f; }
 
-    .secondary { background: var(--accent-2); }
-    .quiz-result { font-weight: 900; margin-top: 10px; }
-    .warning { color: var(--danger); font-weight: 900; }
+    .footer {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      margin-top: 34px;
+      font-size: 13px;
+    }
 
-    @media (max-width: 940px) {
-      .layout { grid-template-columns: 1fr; }
-      aside { position: relative; height: auto; }
-      main { padding: 20px; }
-      .stats, .grid, .map { grid-template-columns: 1fr; }
+    @media (max-width: 900px) {
+      .shell { display: block; }
+      aside {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+      }
+      main { padding: 16px; }
+      .facts, .grid, .cols, .flow { grid-template-columns: 1fr; }
+      .hero { min-height: 62vh; }
     }
   </style>
 </head>
 <body>
-  <div class="layout">
+  <div class="shell">
     <aside>
-      <strong>Harness Engineering Guide</strong>
-      <p class="muted">Курс по репозиторию nexu-io/harness-engineering-guide</p>
-      <div class="progress-shell"><div class="progress" id="progress"></div></div>
-      <div class="muted"><span id="progressText">0%</span> завершено</div>
-      <nav class="nav">
-        <a href="#overview">Обзор</a>
-        <a href="#map">Карта курса</a>
+      <div class="brand">
+        <div class="mark">H</div>
+        <div>
+          <strong>Harness Course</strong>
+          <span>по nexu-io/harness-engineering-guide</span>
+        </div>
+      </div>
+      <div class="progressBox">
+        <strong>Прогресс</strong>
+        <div class="meter"><i id="bar"></i></div>
+        <div class="progressText" id="progressText">0 из 13 отмечено</div>
+      </div>
+      <nav>
+        <a href="#overview">Карта курса</a>
+        <a href="#architecture">Архитектура</a>
         <a href="#modules">Модули</a>
-        <a href="#labs">Практика</a>
-        <a href="#quiz">Тест</a>
-        <a href="#final">Итоговый проект</a>
+        <a href="#workshops">Практикумы</a>
+        <a href="#quiz">Мини-тест</a>
+        <a href="#project">Финальный проект</a>
       </nav>
-      <p><button id="reset">Сбросить прогресс</button></p>
     </aside>
 
     <main>
-      <section class="hero" id="overview">
-        <div class="eyebrow">учебный маршрут</div>
-        <h1>Harness Engineering: от 50 строк Python до production-агента</h1>
-        <p class="muted">Курс построен по материалам репозитория <a href="https://github.com/nexu-io/harness-engineering-guide">nexu-io/harness-engineering-guide</a>. Цель: понять, как harness превращает LLM в агента с циклом действий, инструментами, памятью, контекстом, sandbox и guardrails.</p>
-        <div class="stats">
-          <div class="stat"><strong>8</strong><span class="muted">модулей</span></div>
-          <div class="stat"><strong>10-14 ч</strong><span class="muted">на прохождение</span></div>
-          <div class="stat"><strong>Python</strong><span class="muted">основной практический язык</span></div>
-          <div class="stat"><strong>1</strong><span class="muted">финальный mini-harness</span></div>
+      <header class="hero">
+        <div class="eyebrow">обновлено по main / 86fec9b</div>
+        <h1>Инженерия harness для AI-агентов</h1>
+        <p class="lead">Практический курс по тому, как превратить LLM в управляемого агента: цикл think-act-observe, инструменты, контекст, память, sandbox, permissions, skills, sub-agents, evals и долгоживущие managed agents.</p>
+      </header>
+
+      <div class="facts">
+        <div class="fact"><b>25</b><span>статей guide разобраны в дорожную карту</span></div>
+        <div class="fact"><b>10</b><span>учебных модулей от основ до production</span></div>
+        <div class="fact"><b>6</b><span>практикумов с проверяемыми результатами</span></div>
+        <div class="fact"><b>1</b><span>итоговый проект: мини-harness</span></div>
+      </div>
+
+      <section id="overview">
+        <h2>Карта курса</h2>
+        <p class="sectionLead">Курс идет от минимального harness к production-архитектуре. Главная идея репозитория: framework помогает быстро стартовать, но harness дает контроль над инструментами, памятью, безопасностью, бюджетами и жизненным циклом агента.</p>
+        <div class="grid">
+          <div class="card">
+            <span class="badge">Foundation</span>
+            <h3>Что строим</h3>
+            <p>Harness как runtime wrapper: он исполняет tools, собирает context, ведет memory, ставит guardrails и держит agentic loop.</p>
+          </div>
+          <div class="card">
+            <span class="badge blue">Engineering</span>
+            <h3>Как управляем</h3>
+            <p>Циклы, бюджеты ходов, parallel tool calls, context priority, skill loading, sandbox и retry/degradation стратегии.</p>
+          </div>
+          <div class="card">
+            <span class="badge amber">Production</span>
+            <h3>Как масштабируем</h3>
+            <p>Sub-agents, orchestration, scheduling, managed architecture, eval infrastructure, permission classifiers и agent teams.</p>
+          </div>
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card">
-          <h2>Для кого</h2>
-          <p class="muted">Для разработчиков, которые уже умеют писать backend-код и хотят понять, как устроены coding agents, managed agents и agent runtimes без магии фреймворков.</p>
-        </article>
-        <article class="card">
-          <h2>Результат</h2>
-          <p class="muted">После курса у вас будет рабочий harness: tool loop, registry, memory files, context budget, permission checks, sandbox plan и eval checklist.</p>
-        </article>
-        <article class="card">
-          <h2>Формат</h2>
-          <p class="muted">Каждый модуль: чтение исходной статьи, короткий конспект, практическое задание и чеклист проверки. Прогресс сохраняется в браузере.</p>
-        </article>
-      </section>
-
-      <section id="map" class="card">
-        <h2>Карта курса</h2>
-        <p class="muted">Главная идея репозитория: ценность агента живет не только в модели, а в обвязке вокруг нее. Harness отвечает за то, что модель видит, какие действия может выполнять и как система восстанавливается после ошибок.</p>
-        <div class="map" aria-label="Карта harness">
-          <div class="node">Loop<span>reason, tool call, observe, stop condition</span></div>
-          <div class="node">Tools<span>schemas, registry, dispatch, MCP, skills</span></div>
-          <div class="node">Context<span>priority packing, compression, token reserve</span></div>
-          <div class="node">Memory<span>session, daily logs, MEMORY.md, startup read</span></div>
-          <div class="node">Guardrails<span>permissions, trust boundary, sandbox, approvals</span></div>
+      <section id="architecture">
+        <h2>Архитектура harness</h2>
+        <div class="diagram">
+          <div class="flow">
+            <div class="node"><b>Model</b><span>получает инструкции, контекст, доступные tools и возвращает intent</span></div>
+            <div class="node"><b>Loop</b><span>think -> act -> observe, turn budget, stop conditions, streaming</span></div>
+            <div class="node"><b>Tools</b><span>registry, dynamic loading, MCP, quality descriptions, composition</span></div>
+            <div class="node"><b>State</b><span>session log, context assembly, daily notes, long-term memory</span></div>
+            <div class="node"><b>Safety</b><span>permissions, sandbox, trust boundaries, classifier defense</span></div>
+          </div>
         </div>
       </section>
 
       <section id="modules">
         <h2>Модули</h2>
+        <p class="sectionLead">Открывай модули по порядку. Ссылки ведут на исходные markdown-файлы в репозитории.</p>
 
         <details open>
-          <summary>Модуль 1. Что такое harness и почему это не просто framework</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">60-75 мин</span><span class="pill">концепты</span><span class="pill">архитектура</span></div>
-            <p>Harness - это runtime-обвязка, которая превращает модель в агента: собирает контекст, показывает доступные инструменты, выполняет tool calls, хранит состояние и применяет guardrails. Фреймворк помогает строить harness, но не заменяет инженерные решения вокруг безопасности, памяти и жизненного цикла.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/what-is-harness.md">what-is-harness.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/harness-vs-framework.md">harness-vs-framework.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/comparison.md">comparison.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Сформулировать отличие harness, framework и runtime своими словами.</label>
-            <label><input type="checkbox" data-progress> Выписать четыре подсистемы harness: loop, tools, memory/context, guardrails.</label>
+          <summary>1. Ментальная модель harness</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/what-is-harness.md">what-is-harness</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/harness-vs-framework.md">harness-vs-framework</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/comparison.md">comparison</a>
+            </div>
+            <p>Разберись в различии model, harness, framework и runtime. Хороший harness не прячет важные решения: он делает их явными и тестируемыми.</p>
+            <label class="check"><input type="checkbox" data-check="m1"> <span>Я могу объяснить, почему harness отвечает за tools, memory, context и guardrails.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 2. Первый harness в 50 строк</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">90 мин</span><span class="pill">код</span><span class="pill">Python</span></div>
-            <p>Минимальная версия состоит из system prompt, JSON-схем инструментов, функции dispatch и цикла: вызвать модель, выполнить tool calls, вернуть результаты в историю, повторить до финального ответа.</p>
-            <pre><code>for turn in range(MAX_TURNS):
-    msg = llm(messages, tools)
-    messages.append(msg)
-    if not msg.tool_calls:
-        return msg.content
-    for call in msg.tool_calls:
-        messages.append(run_tool(call))</code></pre>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/your-first-harness.md">your-first-harness.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/agentic-loop.md">agentic-loop.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Запустить пример file assistant из статьи или переписать его под свой OpenAI-compatible client.</label>
-            <label><input type="checkbox" data-progress> Добавить явный MAX_TURNS и понятный текст ошибки при превышении бюджета.</label>
+          <summary>2. Первый рабочий агент</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/your-first-harness.md">your-first-harness</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/agentic-loop.md">agentic-loop</a>
+            </div>
+            <p>Собери минимальный цикл: system prompt, tool schema, tool execution, observation append, exit conditions. Главный риск начинающих - бесконечная петля без бюджета и критериев остановки.</p>
+            <pre><code>while turns_left:
+    response = model(messages, tools=registry.schemas())
+    if response.final:
+        break
+    results = run_tool_calls(response.tool_calls)
+    messages.append(observations(results))</code></pre>
+            <label class="check"><input type="checkbox" data-check="m2"> <span>Я понимаю, где в loop появляются turn budget, parallel tool calls и observation.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 3. Agentic loop: выходы, бюджеты, параллельные tool calls</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">75 мин</span><span class="pill">надежность</span></div>
-            <p>Production loop не просто повторяет вызовы модели. Он умеет останавливаться, распознавать зацикливание, обрабатывать tool errors как наблюдения, сохранять trace и не засорять контекст огромными результатами инструментов.</p>
-            <label><input type="checkbox" data-progress> Реализовать проверку на три одинаковых tool calls подряд.</label>
-            <label><input type="checkbox" data-progress> Ограничить размер tool result и помечать усеченные результаты как [TRUNCATED].</label>
-            <label><input type="checkbox" data-progress> Поддержать несколько tool calls в одном ответе модели.</label>
+          <summary>3. Tool system и skill system</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/tool-system.md">tool-system</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/skill-system.md">skill-system</a>
+            </div>
+            <p>Tools - исполняемые возможности. Skills - лениво подгружаемые инструкции и наборы инструментов. Практичный паттерн: thin harness, thick skills, где harness знает как грузить и изолировать способности, а domain logic живет рядом со skill.</p>
+            <label class="check"><input type="checkbox" data-check="m3"> <span>Я могу спроектировать registry, где модель видит не 100 tools сразу, а меню навыков.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 4. Tool system: registry, schemas, dynamic skills</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">90 мин</span><span class="pill">tools</span><span class="pill">MCP</span></div>
-            <p>Модель видит только схему инструмента, а harness выполняет реальный handler. Качество описаний, единый формат ошибок и динамическая загрузка skills часто важнее, чем выбор модели.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/tool-system.md">tool-system.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/skill-system.md">skill-system.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Сделать ToolRegistry с методами register, get_schemas и dispatch.</label>
-            <label><input type="checkbox" data-progress> Переписать одно расплывчатое описание инструмента в точное: вход, выход, лимиты, пример.</label>
-            <label><input type="checkbox" data-progress> Спроектировать skill menu для file_ops, git, web и database.</label>
+          <summary>4. Context engineering и memory</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/context-engineering.md">context-engineering</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/memory-and-context.md">memory-and-context</a>
+            </div>
+            <p>Контекст - не свалка. Нужна приоритизация: system, user task, repo instructions, recent messages, retrieved facts, summaries. Memory делится на raw daily logs и curated long-term memory.</p>
+            <label class="check"><input type="checkbox" data-check="m4"> <span>Я умею описать порядок сборки контекста и стратегию сжатия при переполнении.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 5. Memory & context: что модель видит в каждом turn</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">90 мин</span><span class="pill">context engineering</span></div>
-            <p>Context - это один API-вызов, session - состояние задачи, memory - то, что переживает перезапуск. Context assembler решает упаковочную задачу: system prompt, tools, task, memory, файлы и недавняя история должны поместиться в бюджет с резервом на ответ.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/memory-and-context.md">memory-and-context.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/context-engineering.md">context-engineering.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Реализовать приоритетный ContextAssembler с reserve для ответа модели.</label>
-            <label><input type="checkbox" data-progress> Создать memory/YYYY-MM-DD.md и MEMORY.md как два уровня памяти.</label>
-            <label><input type="checkbox" data-progress> Добавить compression checkpoint для длинной сессии.</label>
+          <summary>5. Guardrails, sandbox и permissions</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/guardrails.md">guardrails</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/sandbox.md">sandbox</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/classifier-permissions.md">classifier-permissions</a>
+            </div>
+            <p>Безопасность строится слоями: trust boundary, allow/deny/tiered permissions, isolated execution, network/filesystem limits и classifier-based permission checks для снижения approval fatigue.</p>
+            <label class="check"><input type="checkbox" data-check="m5"> <span>Я могу отделить low-risk, needs-approval и deny операции для агента.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 6. Guardrails и sandbox: модель просит, harness решает</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">90 мин</span><span class="pill">security</span></div>
-            <p>Guardrails нельзя сводить к промпту. Проверка прав должна выполняться в коде перед каждым действием: allow/deny/modify/ask. Sandbox ограничивает последствия на уровне ОС: filesystem, network, process, user permissions.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/guardrails.md">guardrails.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/sandbox.md">sandbox.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/classifier-permissions.md">classifier-permissions.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Описать trust boundary между model space и execution space.</label>
-            <label><input type="checkbox" data-progress> Добавить tiered approval: read auto, write logged, shell/network ask, destructive deny.</label>
-            <label><input type="checkbox" data-progress> Составить Docker sandbox policy: non-root user, ограниченные volumes, network policy.</label>
+          <summary>6. Ошибки, retry и graceful degradation</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/error-handling.md">error-handling</a>
+            </div>
+            <p>Хороший harness классифицирует ошибки: transient, permission, validation, model, infrastructure. Retry нужен не везде; иногда правильнее деградировать, запросить данные или checkpoint/resume.</p>
+            <label class="check"><input type="checkbox" data-check="m6"> <span>Я могу написать матрицу error type -> action -> user visibility.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 7. Sub-agents, orchestration и long-running tasks</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">75 мин</span><span class="pill">multi-agent</span></div>
-            <p>Sub-agents полезны, когда нужна изоляция контекста, специализация или параллельное исследование. Но orchestration стоит дорого: нужен timeout, bounded fan-out, понятный формат результата и защита от shared mutable state.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/sub-agent.md">sub-agent.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/multi-agent-orchestration.md">multi-agent-orchestration.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/long-running-harness.md">long-running-harness.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/managed-agents-architecture.md">managed-agents-architecture.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Спроектировать fan-out/fan-in задачу из трех worker agents.</label>
-            <label><input type="checkbox" data-progress> Добавить timeout и формат worker_result.md.</label>
-            <label><input type="checkbox" data-progress> Объяснить разницу brain, session и hands в managed architecture.</label>
+          <summary>7. Sub-agents и orchestration</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/sub-agent.md">sub-agent</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/multi-agent-orchestration.md">multi-agent-orchestration</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/agent-teams.md">agent-teams</a>
+            </div>
+            <p>Sub-agents нужны для изоляции контекста, специализации и параллелизма. Изучи pipeline, fan-out/fan-in, supervisor и git-based coordination для больших задач.</p>
+            <label class="check"><input type="checkbox" data-check="m7"> <span>Я понимаю, когда параллелить работу, а когда держать одного лидера с единым контекстом.</span></label>
           </div>
         </details>
 
         <details>
-          <summary>Модуль 8. Error handling, scheduling и evals</summary>
-          <div class="lesson-body">
-            <div class="lesson-meta"><span class="pill">90 мин</span><span class="pill">production</span></div>
-            <p>Надежный harness классифицирует ошибки, ретраит только временные сбои, умеет checkpoint/resume, запускает scheduled work без загрязнения основной сессии и оценивает агентов с учетом инфраструктурного шума.</p>
-            <ul class="source-list">
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/error-handling.md">error-handling.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/scheduling-and-automation.md">scheduling-and-automation.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/eval-infrastructure.md">eval-infrastructure.md</a></li>
-              <li><a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/eval-awareness.md">eval-awareness.md</a></li>
-            </ul>
-            <label><input type="checkbox" data-progress> Разделить ошибки на transient, permanent, permission и model confusion.</label>
-            <label><input type="checkbox" data-progress> Сделать checkpoint/resume для multi-turn задачи.</label>
-            <label><input type="checkbox" data-progress> Написать eval rubric, где отдельно считаются task success и infrastructure failure.</label>
+          <summary>8. Долгоживущие и managed agents</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/long-running-harness.md">long-running-harness</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/managed-agents-architecture.md">managed-agents-architecture</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/initializer-coding-pattern.md">initializer-coding-pattern</a>
+            </div>
+            <p>Долгие задачи ломаются от context anxiety и self-evaluation bias. Репозиторий предлагает reset vs compaction, generator-evaluator архитектуру и разделение brain/session/hands.</p>
+            <label class="check"><input type="checkbox" data-check="m8"> <span>Я могу объяснить, почему session не равен context window.</span></label>
+          </div>
+        </details>
+
+        <details>
+          <summary>9. Scheduling, automation и heartbeats</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/scheduling-and-automation.md">scheduling-and-automation</a>
+            </div>
+            <p>Автоматизация бывает one-shot, recurring cron, event-triggered и heartbeat-based. Важно выбрать session targeting, delivery surface и payload contract, чтобы задача не теряла контекст.</p>
+            <label class="check"><input type="checkbox" data-check="m9"> <span>Я умею выбрать cron или heartbeat под конкретный сценарий.</span></label>
+          </div>
+        </details>
+
+        <details>
+          <summary>10. Evals, инфраструктурный шум и реальные кейсы</summary>
+          <div class="moduleBody">
+            <div class="reading">
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/eval-infrastructure.md">eval-infrastructure</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/eval-awareness.md">eval-awareness</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/nexu-windows-packaging.md">nexu-windows-packaging</a>
+              <a href="https://github.com/nexu-io/harness-engineering-guide/blob/main/guide/ghost-account-hunting.md">ghost-account-hunting</a>
+            </div>
+            <p>Agent evals чувствительны к ресурсам, времени, изоляции и тому, распознает ли агент тест. Производственные кейсы показывают, что harness engineering - это не только LLM code, но и инфраструктура вокруг него.</p>
+            <label class="check"><input type="checkbox" data-check="m10"> <span>Я могу назвать два способа, как инфраструктура и eval awareness искажают результаты тестов.</span></label>
           </div>
         </details>
       </section>
 
-      <section id="labs" class="practice">
-        <h2>Практические работы</h2>
-        <p class="muted">Практикумы можно выполнять последовательно в одном mini-harness проекте.</p>
-        <div class="grid">
-          <article>
-            <h3>Lab 1. File agent</h3>
-            <p>Соберите read/write file assistant с MAX_TURNS, trace log и явными ошибками инструментов.</p>
-            <label><input type="checkbox" data-progress> Trace log показывает каждый tool call и результат.</label>
-          </article>
-          <article>
-            <h3>Lab 2. Context budget</h3>
-            <p>Добавьте ContextAssembler с приоритетами и тестом, который доказывает, что low-priority секции отбрасываются первыми.</p>
-            <label><input type="checkbox" data-progress> Есть тест на резерв токенов для ответа.</label>
-          </article>
-          <article>
-            <h3>Lab 3. Permissions</h3>
-            <p>Вставьте guardrail layer перед dispatch: read разрешен, write логируется, shell требует approval stub, dangerous commands запрещены.</p>
-            <label><input type="checkbox" data-progress> Попытка destructive command возвращает отказ в tool result.</label>
-          </article>
+      <section id="workshops">
+        <h2>Практикумы</h2>
+        <div class="cols">
+          <div class="practice">
+            <h3>Практикум 1: Minimal harness</h3>
+            <p><strong>Результат:</strong> 50-80 строк Python с tool loop, одним tool и stop condition.</p>
+            <label class="check"><input type="checkbox" data-check="w1"> <span>Код запускается и агент вызывает tool хотя бы один раз.</span></label>
+          </div>
+          <div class="practice">
+            <h3>Практикум 2: Tool registry</h3>
+            <p><strong>Результат:</strong> registry со schema, implementation, validation и понятными descriptions.</p>
+            <label class="check"><input type="checkbox" data-check="w2"> <span>Новый tool добавляется без изменения основного loop.</span></label>
+          </div>
+          <div class="practice">
+            <h3>Практикум 3: Context budget</h3>
+            <p><strong>Результат:</strong> функция сборки context с priority slots и fallback summary.</p>
+            <label class="check"><input type="checkbox" data-check="w3"> <span>Есть порядок вытеснения данных при лимите токенов.</span></label>
+          </div>
+          <div class="practice">
+            <h3>Практикум 4: Permission gates</h3>
+            <p><strong>Результат:</strong> таблица allow/ask/deny для shell, file, network, messaging операций.</p>
+            <label class="check"><input type="checkbox" data-check="w4"> <span>Dangerous action нельзя выполнить без явного решения policy layer.</span></label>
+          </div>
+          <div class="practice">
+            <h3>Практикум 5: Sub-agent fan-out</h3>
+            <p><strong>Результат:</strong> leader разбивает задачу на 3 независимых исследования и собирает итог.</p>
+            <label class="check"><input type="checkbox" data-check="w5"> <span>Каждый worker получает отдельный контекст и короткий контракт результата.</span></label>
+          </div>
+          <div class="practice">
+            <h3>Практикум 6: Eval harness</h3>
+            <p><strong>Результат:</strong> 5 задач, одинаковые resource limits, лог ошибок и итоговая таблица.</p>
+            <label class="check"><input type="checkbox" data-check="w6"> <span>Отчет разделяет model failure и infrastructure failure.</span></label>
+          </div>
         </div>
       </section>
 
-      <section id="quiz" class="card">
+      <section id="quiz">
         <h2>Мини-тест</h2>
-        <p><strong>1. Где должна исполняться реальная проверка прав?</strong></p>
-        <label><input type="radio" name="q1" value="0"> Только в system prompt, потому что модель прочитает правила.</label>
-        <label><input type="radio" name="q1" value="1"> В коде harness перед выполнением tool call.</label>
-        <label><input type="radio" name="q1" value="0"> В README проекта.</label>
-        <p><strong>2. Что модель видит при tool use?</strong></p>
-        <label><input type="radio" name="q2" value="1"> Схему инструмента, описание и параметры.</label>
-        <label><input type="radio" name="q2" value="0"> Реальную Python-реализацию handler.</label>
-        <label><input type="radio" name="q2" value="0"> Полный sandbox filesystem.</label>
-        <p><strong>3. Почему нужен MAX_TURNS?</strong></p>
-        <label><input type="radio" name="q3" value="0"> Чтобы модель отвечала короче.</label>
-        <label><input type="radio" name="q3" value="1"> Чтобы остановить зацикливание agentic loop и контролировать стоимость.</label>
-        <label><input type="radio" name="q3" value="0"> Чтобы заменить memory.</label>
-        <button id="checkQuiz">Проверить</button>
-        <div class="quiz-result" id="quizResult"></div>
+        <div class="quiz">
+          <div class="question" data-answer="b">
+            <h3>1. Что является главной обязанностью harness?</h3>
+            <label><input type="radio" name="q1" value="a"> Заменить модель более умной моделью</label>
+            <label><input type="radio" name="q1" value="b"> Исполнять runtime-цикл агента: tools, context, memory, safety</label>
+            <label><input type="radio" name="q1" value="c"> Хранить только prompts</label>
+          </div>
+          <div class="question" data-answer="a">
+            <h3>2. Почему нельзя просто дать модели все tools сразу?</h3>
+            <label><input type="radio" name="q2" value="a"> Растет шум в контексте, ухудшается выбор tools и расходуются токены</label>
+            <label><input type="radio" name="q2" value="b"> Модель физически не умеет вызывать больше одного tool</label>
+            <label><input type="radio" name="q2" value="c"> Tools должны быть скрыты от harness</label>
+          </div>
+          <div class="question" data-answer="c">
+            <h3>3. Что лучше всего описывает session?</h3>
+            <label><input type="radio" name="q3" value="a"> Только последний prompt</label>
+            <label><input type="radio" name="q3" value="b"> Размер context window</label>
+            <label><input type="radio" name="q3" value="c"> Event log, из которого можно собрать актуальный context</label>
+          </div>
+          <div class="question" data-answer="b">
+            <h3>4. Когда полезен sub-agent?</h3>
+            <label><input type="radio" name="q4" value="a"> Для любой мелкой операции вместо обычного tool</label>
+            <label><input type="radio" name="q4" value="b"> Когда нужна изоляция контекста, специализация или параллельное исследование</label>
+            <label><input type="radio" name="q4" value="c"> Только когда основной агент сломался</label>
+          </div>
+          <button id="checkQuiz">Проверить тест</button>
+          <button class="secondary" id="resetProgress">Сбросить прогресс</button>
+          <div class="result" id="quizResult"></div>
+        </div>
       </section>
 
-      <section id="final" class="card">
-        <h2>Итоговый проект</h2>
-        <p class="muted">Соберите mini-harness для исследовательского агента, который принимает URL репозитория, читает README и выбранные файлы, строит план изучения и сохраняет HTML-курс. Это ровно тот тип задачи, для которой нужны loop, tools, context, memory и guardrails.</p>
-        <h3>Минимальные требования</h3>
-        <label><input type="checkbox" data-progress> Agentic loop с MAX_TURNS, trace log и обработкой tool errors.</label>
-        <label><input type="checkbox" data-progress> ToolRegistry минимум для read_file, list_files, write_file и web_fetch/repo_fetch.</label>
-        <label><input type="checkbox" data-progress> ContextAssembler с приоритетами и ограничением размера tool results.</label>
-        <label><input type="checkbox" data-progress> Permission layer, который запрещает destructive shell/network действия без approval.</label>
-        <label><input type="checkbox" data-progress> Финальный HTML содержит учебные цели, модули, практику, тест и ссылки на источники.</label>
-        <p class="warning">Критерий готовности: другой разработчик может запустить проект, пройти курс и увидеть, какие решения в harness являются учебными, а какие обязательны для production.</p>
+      <section id="project">
+        <h2>Финальный проект</h2>
+        <div class="project">
+          <h3>Собери Mini Harness для coding assistant</h3>
+          <p>Цель: сделать маленький, но честный harness, который читает задачу, собирает контекст из папки проекта, может читать файлы, запускать безопасные команды и возвращать итог с логом действий.</p>
+          <div class="cols">
+            <div>
+              <h3>Обязательные компоненты</h3>
+              <ul>
+                <li>Agentic loop с лимитом ходов и явным stop condition.</li>
+                <li>Tool registry минимум из трех tools: read_file, list_files, run_tests.</li>
+                <li>Context assembler с приоритетами и ограничением бюджета.</li>
+                <li>Permission policy: allow для чтения, ask/deny для опасных shell-команд.</li>
+                <li>Session log и краткий final report.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Критерии защиты</h3>
+              <ul>
+                <li>Можно объяснить, где проходит trust boundary.</li>
+                <li>Ошибки tools классифицируются и не ломают весь loop.</li>
+                <li>Есть один eval сценарий с ожидаемым результатом.</li>
+                <li>Документация показывает, когда добавлять skill или sub-agent.</li>
+              </ul>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-check="final"> <span>Финальный проект собран и проверен на одной реальной папке с кодом.</span></label>
+        </div>
       </section>
+
+      <div class="footer">
+        Источник: <a href="https://github.com/nexu-io/harness-engineering-guide">github.com/nexu-io/harness-engineering-guide</a>. HTML самодостаточный; прогресс хранится локально в браузере.
+      </div>
     </main>
   </div>
 
   <script>
-    const key = "nexu-harness-engineering-guide-course-progress";
-    const checks = Array.from(document.querySelectorAll("[data-progress]"));
-    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+    const checks = Array.from(document.querySelectorAll('[data-check]'));
+    const key = 'harness-course-progress-v2';
+    const saved = JSON.parse(localStorage.getItem(key) || '{}');
+    const bar = document.getElementById('bar');
+    const text = document.getElementById('progressText');
 
-    checks.forEach((box, index) => {
-      box.checked = Boolean(saved[index]);
-      box.addEventListener("change", sync);
-    });
-
-    function sync() {
+    function update() {
       const state = {};
-      checks.forEach((box, index) => state[index] = box.checked);
+      let done = 0;
+      checks.forEach(input => {
+        state[input.dataset.check] = input.checked;
+        if (input.checked) done += 1;
+      });
       localStorage.setItem(key, JSON.stringify(state));
-      const done = checks.filter(box => box.checked).length;
-      const pct = checks.length ? Math.round((done / checks.length) * 100) : 0;
-      document.getElementById("progress").style.width = pct + "%";
-      document.getElementById("progressText").textContent = pct + "%";
+      const pct = checks.length ? Math.round(done / checks.length * 100) : 0;
+      bar.style.width = pct + '%';
+      text.textContent = done + ' из ' + checks.length + ' отмечено';
     }
 
-    document.getElementById("reset").addEventListener("click", () => {
-      localStorage.removeItem(key);
-      checks.forEach(box => box.checked = false);
-      sync();
+    checks.forEach(input => {
+      input.checked = Boolean(saved[input.dataset.check]);
+      input.addEventListener('change', update);
     });
+    update();
 
-    document.getElementById("checkQuiz").addEventListener("click", () => {
-      const correct = ["q1", "q2", "q3"].every(name => {
-        const selected = document.querySelector(`input[name="${name}"]:checked`);
-        return selected && selected.value === "1";
+    document.getElementById('checkQuiz').addEventListener('click', () => {
+      const questions = Array.from(document.querySelectorAll('.question'));
+      let score = 0;
+      questions.forEach((q, i) => {
+        const picked = document.querySelector('input[name="q' + (i + 1) + '"]:checked');
+        if (picked && picked.value === q.dataset.answer) score += 1;
       });
-      document.getElementById("quizResult").textContent = correct
-        ? "Верно. Можно переходить к итоговому проекту."
-        : "Есть ошибка. Повторите модули про loop, tools и guardrails.";
+      document.getElementById('quizResult').textContent = 'Результат: ' + score + ' из ' + questions.length + '.';
     });
 
-    sync();
+    document.getElementById('resetProgress').addEventListener('click', () => {
+      localStorage.removeItem(key);
+      checks.forEach(input => input.checked = false);
+      update();
+      document.getElementById('quizResult').textContent = '';
+      document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+    });
   </script>
 </body>
 </html>
