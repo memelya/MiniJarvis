@@ -1,0 +1,138 @@
+{
+  "canvas": {
+    "width": 1210,
+    "height": 1138,
+    "fps": 20,
+    "frames": 41
+  },
+  "signature": "MiniJarvis",
+  "title": {
+    "prefix": "Learning",
+    "highlight": "OpenClaw",
+    "subtitle": "Personal assistant architecture from repository signals to verified practice"
+  },
+  "input_title": "Source / Input",
+  "inputs": [
+    {
+      "label": "Repo",
+      "icon": "folder",
+      "color": "#7ee3d6"
+    },
+    {
+      "label": "Docs",
+      "icon": "file",
+      "color": "#ff7ab6"
+    },
+    {
+      "label": "Config",
+      "icon": "file",
+      "color": "#f4b64e"
+    },
+    {
+      "label": "CI",
+      "icon": "shield",
+      "color": "#7ee3d6"
+    }
+  ],
+  "core": {
+    "title": "Course Core",
+    "subtitle": "(read, map, practice)",
+    "cards": [
+      {
+        "title": "Orient",
+        "body": "Project purpose\nentry points",
+        "icon": "scan"
+      },
+      {
+        "title": "Map",
+        "body": "Gateway, agents\nnodes, tools",
+        "icon": "db"
+      },
+      {
+        "title": "Build",
+        "body": "Small change\ntested outcome",
+        "icon": "package"
+      }
+    ]
+  },
+  "decision": {
+    "title": "Ready?",
+    "body": "checks pass\nrisks named"
+  },
+  "output": {
+    "label": "Course",
+    "icon": "file"
+  },
+  "loop_label": "Loop through examples until architecture, tests, and operations are clear",
+  "retry_label": "Review missing context or failing checks",
+  "left_panel": {
+    "title": "Context",
+    "badge": "repo",
+    "cards": [
+      {
+        "title": "Gateway",
+        "body": "control plane\nrouting",
+        "icon": "folder"
+      },
+      {
+        "title": "Channels",
+        "body": "Telegram, web\nlocal surfaces",
+        "icon": "file"
+      },
+      {
+        "title": "Nodes",
+        "body": "device runtime\ncanvas clients",
+        "icon": "file"
+      }
+    ]
+  },
+  "center_panel": {
+    "title": "Concept Layers",
+    "subtitle": "(how the system hangs together)",
+    "footer": "Trace + Verify",
+    "cards": [
+      {
+        "title": "Agents",
+        "body": "instructions\nstate",
+        "icon": "folder"
+      },
+      {
+        "title": "Tools",
+        "body": "commands\nintegrations",
+        "icon": "package"
+      },
+      {
+        "title": "Skills",
+        "body": "reusable\nworkflows",
+        "icon": "hash"
+      },
+      {
+        "title": "Security",
+        "body": "boundaries\nsecrets",
+        "icon": "shield"
+      }
+    ]
+  },
+  "right_panel": {
+    "title": "Learner Output",
+    "incoming_label": "Practice",
+    "return_label": "Improve",
+    "cards": [
+      {
+        "title": "HTML Course",
+        "body": "guided modules\nprogress",
+        "icon": "file"
+      },
+      {
+        "title": "Verification",
+        "body": "tests, CI\nquality gate",
+        "icon": "shield"
+      },
+      {
+        "title": "Final Project",
+        "body": "useful change\nops impact",
+        "icon": "package"
+      }
+    ]
+  }
+}
