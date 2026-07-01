@@ -1,20 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🦞 OpenClaw — Personal AI Assistant</title>
+  <title>🦞 OpenClaw — Персональный ИИ-ассистент</title>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; color: #172026; background: #f5f7f8; }
-    .arch-diagram { max-width: 100%; height: auto; display: block; margin: 0 auto 16px; border-radius: 12px; background: #0f1a1e; }
-    @keyframes flowArrow { 0% { stroke-dashoffset: 80; } 100% { stroke-dashoffset: 0; } }
-    @keyframes pulse { 0%, 100% { opacity: .4; r: 4; } 50% { opacity: 1; r: 6; } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes glowCard { 0%, 100% { filter: drop-shadow(0 0 3px rgba(47,143,157,.3)); } 50% { filter: drop-shadow(0 0 8px rgba(47,143,157,.7)); } }
-    .flow-arrow { fill: none; stroke: #2f8f9d; stroke-width: 2; stroke-dasharray: 8,4; animation: flowArrow 2s linear infinite; }
-    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
-    .glow-card { animation: glowCard 3s ease-in-out infinite; }
-    .fade-in { animation: fadeIn .6s ease forwards; opacity: 0; }
     header { padding: 32px; background: #12343b; color: white; }
     .layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; max-width: 1180px; margin: 0 auto; padding: 24px; }
     nav { position: sticky; top: 16px; align-self: start; display: grid; gap: 8px; }
@@ -30,150 +21,29 @@
 </head>
 <body>
   <header>
-    <h1>🦞 OpenClaw — Personal AI Assistant</h1>
+    <h1>🦞 OpenClaw — Персональный ИИ-ассистент</h1>
     <p>https://github.com/openclaw/openclaw</p>
-    <p>Level: intermediate | Audience: developers_and_technical_product_managers | Duration: flexible</p>
+    <p>Уровень: средний | Аудитория: разработчики и тех. проджект-менеджеры | Длительность: гибкая</p>
   </header>
   <main class="layout">
     <nav>
-      <strong>Modules</strong>
-      <a href='#module-1'>1. Orientation and project purpose</a>
-<a href='#module-2'>2. Architecture and core concepts</a>
-<a href='#module-3'>3. Implementation walkthrough</a>
-<a href='#module-4'>4. Testing and quality</a>
-<a href='#module-5'>5. Practice and extension</a>
-      <button id="reset">Reset progress</button>
+      <strong>Модули</strong>
+      <a href='#module-1'>1. Ориентация и назначение проекта</a>
+<a href='#module-2'>2. Архитектура и ключевые концепции</a>
+<a href='#module-3'>3. Обзор реализации</a>
+<a href='#module-4'>4. Тестирование и качество</a>
+<a href='#module-5'>5. Практика и развитие</a>
+      <button id="reset">Сбросить прогресс</button>
     </nav>
     <div>
       <section class="panel">
-        <h2>Progress</h2>
+        <h2>Прогресс</h2>
         <div class="progress"><div class="bar" id="bar"></div></div>
-        <p id="progressText">0% complete</p>
+        <p id="progressText">0% завершено</p>
       </section>
       <section class="panel">
-        <h2>🗺 Архитектура курса</h2>
-        <svg class="arch-diagram" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f1a1e"/><stop offset="100%" stop-color="#162d33"/></linearGradient>
-            <linearGradient id="inputGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1d4a52"/><stop offset="100%" stop-color="#15353b"/></linearGradient>
-            <linearGradient id="coreGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f8f9d"/><stop offset="100%" stop-color="#1f6a75"/></linearGradient>
-            <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <rect width="1000" height="520" rx="12" fill="url(#bgGrad)"/>
-          
-          <!-- Title -->
-          <text x="500" y="36" text-anchor="middle" fill="#b8d8e0" font-size="18" font-weight="bold" font-family="sans-serif">🦞 Курс по OpenClaw — Архитектура обучения</text>
-          
-          <!-- === INPUTS (left column) === -->
-          <g class="fade-in" style="animation-delay: .1s">
-            <rect x="40" y="65" width="160" height="76" rx="10" fill="url(#inputGrad)" stroke="#3faab8" stroke-width="1.5"/>
-            <text x="120" y="95" text-anchor="middle" fill="#b8d8e0" font-size="13" font-weight="bold">📦 Исходники</text>
-            <text x="120" y="114" text-anchor="middle" fill="#8ab4ba" font-size="10">20k+ файлов</text>
-            <text x="120" y="128" text-anchor="middle" fill="#8ab4ba" font-size="10">Python / TS / Go</text>
-          </g>
-          <g class="fade-in" style="animation-delay: .2s">
-            <rect x="40" y="155" width="160" height="76" rx="10" fill="url(#inputGrad)" stroke="#3faab8" stroke-width="1.5"/>
-            <text x="120" y="185" text-anchor="middle" fill="#b8d8e0" font-size="13" font-weight="bold">📖 Документация</text>
-            <text x="120" y="204" text-anchor="middle" fill="#8ab4ba" font-size="10">README + Docs</text>
-            <text x="120" y="218" text-anchor="middle" fill="#8ab4ba" font-size="10">CI-воркфлоу</text>
-          </g>
-          <g class="fade-in" style="animation-delay: .3s">
-            <rect x="40" y="245" width="160" height="76" rx="10" fill="url(#inputGrad)" stroke="#3faab8" stroke-width="1.5"/>
-            <text x="120" y="275" text-anchor="middle" fill="#b8d8e0" font-size="13" font-weight="bold">🤖 Агент-скиллы</text>
-            <text x="120" y="294" text-anchor="middle" fill="#8ab4ba" font-size="10">QA / Perf / Leaks</text>
-            <text x="120" y="308" text-anchor="middle" fill="#8ab4ba" font-size="10">Codex-навыки</text>
-          </g>
-          
-          <text x="120" y="350" text-anchor="middle" fill="#5a8a92" font-size="11" font-style="italic">Входные данные</text>
-
-          <!-- Arrows from inputs to core -->
-          <path d="M200 103 L290 103" class="flow-arrow"/>
-          <path d="M200 193 L290 193" class="flow-arrow" style="animation-delay: .3s"/>
-          <path d="M200 283 L290 283" class="flow-arrow" style="animation-delay: .6s"/>
-
-          <!-- === CORE (center column) === -->
-          <g class="fade-in" style="animation-delay: .4s">
-            <rect x="300" y="65" width="200" height="76" rx="12" fill="url(#coreGrad)" filter="url(#glow)" class="glow-card"/>
-            <text x="400" y="98" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">🔍 Изучить</text>
-            <text x="400" y="118" text-anchor="middle" fill="#c8e6ed" font-size="11">Структура репо</text>
-            <text x="400" y="132" text-anchor="middle" fill="#c8e6ed" font-size="11">Ключевые файлы</text>
-          </g>
-          <g class="fade-in" style="animation-delay: .5s">
-            <rect x="300" y="165" width="200" height="76" rx="12" fill="url(#coreGrad)" filter="url(#glow)" class="glow-card"/>
-            <text x="400" y="198" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">🧠 Понять</text>
-            <text x="400" y="218" text-anchor="middle" fill="#c8e6ed" font-size="11">Архитектура Gateway</text>
-            <text x="400" y="232" text-anchor="middle" fill="#c8e6ed" font-size="11">Каналы + навыки</text>
-          </g>
-          <g class="fade-in" style="animation-delay: .6s">
-            <rect x="300" y="265" width="200" height="76" rx="12" fill="url(#coreGrad)" filter="url(#glow)" class="glow-card"/>
-            <text x="400" y="298" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">⚙️ Применить</text>
-            <text x="400" y="318" text-anchor="middle" fill="#c8e6ed" font-size="11">Тесты + CI/CD</text>
-            <text x="400" y="332" text-anchor="middle" fill="#c8e6ed" font-size="11">Финальный проект</text>
-          </g>
-
-          <!-- Center connecting arrows -->
-          <path d="M400 141 L400 165" class="flow-arrow" style="animation-delay: .5s; stroke-dashoffset: 40"/>
-          <path d="M400 241 L400 265" class="flow-arrow" style="animation-delay: .8s; stroke-dashoffset: 40"/>
-
-          <!-- === DECISION GATE === -->
-          <g class="fade-in" style="animation-delay: .7s">
-            <polygon points="500,193 540,173 540,213" fill="#e8a838" opacity=".9"/>
-            <text x="552" y="197" fill="#e8a838" font-size="11" font-weight="bold">Качество</text>
-          </g>
-          <circle cx="503" cy="193" r="4" fill="#e8a838" class="pulse-dot"/>
-
-          <!-- Arrow from core to output -->
-          <path d="M500 193 L580 193" class="flow-arrow" style="animation-delay: .9s"/>
-
-          <!-- === OUTPUT (right column) === -->
-          <g class="fade-in" style="animation-delay: .8s">
-            <rect x="590" y="65" width="200" height="76" rx="10" fill="#1a4a3a" stroke="#4cb07c" stroke-width="1.5"/>
-            <text x="690" y="98" text-anchor="middle" fill="#b8e0c8" font-size="13" font-weight="bold">📄 HTML-курс</text>
-            <text x="690" y="118" text-anchor="middle" fill="#8ab4a0" font-size="10">Интерактивная</text>
-            <text x="690" y="132" text-anchor="middle" fill="#8ab4a0" font-size="10">веб-страница</text>
-          </g>
-          <g class="fade-in" style="animation-delay: .9s">
-            <rect x="590" y="155" width="200" height="76" rx="10" fill="#1a4a3a" stroke="#4cb07c" stroke-width="1.5"/>
-            <text x="690" y="185" text-anchor="middle" fill="#b8e0c8" font-size="13" font-weight="bold">📘 GitHub Pages</text>
-            <text x="690" y="204" text-anchor="middle" fill="#8ab4a0" font-size="10">Публикация на</text>
-            <text x="690" y="218" text-anchor="middle" fill="#8ab4a0" font-size="10">MiniJarvis</text>
-          </g>
-          <g class="fade-in" style="animation-delay: 1s">
-            <rect x="590" y="245" width="200" height="76" rx="10" fill="#1a4a3a" stroke="#4cb07c" stroke-width="1.5"/>
-            <text x="690" y="275" text-anchor="middle" fill="#b8e0c8" font-size="13" font-weight="bold">✅ Знания</text>
-            <text x="690" y="294" text-anchor="middle" fill="#8ab4a0" font-size="10">Навыки работы с</text>
-            <text x="690" y="308" text-anchor="middle" fill="#8ab4a0" font-size="10">OpenClaw</text>
-          </g>
-          
-          <!-- Feedback loop arrow (bottom) -->
-          <path d="M790 283 Q850 283 850 380 Q850 430 690 430 Q500 430 400 430 L400 360" fill="none" stroke="#5a8a92" stroke-width="1.5" stroke-dasharray="6,4" opacity=".6"/>
-          <text x="750" y="420" text-anchor="middle" fill="#5a8a92" font-size="10" font-style="italic">🔄 Обратная связь / итерация</text>
-
-          <!-- === LEGEND BOTTOM === -->
-          <rect x="40" y="400" width="900" height="100" rx="10" fill="#0d1c20" stroke="#1d4a52" stroke-width="1"/>
-          
-          <text x="60" y="420" fill="#8ab4ba" font-size="11" font-weight="bold">Карта репозитория</text>
-          <text x="60" y="438" fill="#5a8a92" font-size="9">.crabbox.yaml • CI/CD • Dockerfile • README • AGENTS.md</text>
-          
-          <text x="60" y="460" fill="#8ab4ba" font-size="11" font-weight="bold">Модули курса</text>
-          <rect x="60" y="466" width="28" height="16" rx="4" fill="#2f8f9d"/><text x="74" y="478" text-anchor="middle" fill="#fff" font-size="9">1</text>
-          <text x="93" y="478" fill="#8ab4ba" font-size="10">Ориентация</text>
-          <rect x="185" y="466" width="28" height="16" rx="4" fill="#2f8f9d"/><text x="199" y="478" text-anchor="middle" fill="#fff" font-size="9">2</text>
-          <text x="218" y="478" fill="#8ab4ba" font-size="10">Архитектура</text>
-          <rect x="325" y="466" width="28" height="16" rx="4" fill="#2f8f9d"/><text x="339" y="478" text-anchor="middle" fill="#fff" font-size="9">3</text>
-          <text x="358" y="478" fill="#8ab4ba" font-size="10">Реализация</text>
-          <rect x="455" y="466" width="28" height="16" rx="4" fill="#2f8f9d"/><text x="469" y="478" text-anchor="middle" fill="#fff" font-size="9">4</text>
-          <text x="488" y="478" fill="#8ab4ba" font-size="10">Тестирование</text>
-          <rect x="600" y="466" width="28" height="16" rx="4" fill="#2f8f9d"/><text x="614" y="478" text-anchor="middle" fill="#fff" font-size="9">5</text>
-          <text x="633" y="478" fill="#8ab4ba" font-size="10">Практика</text>
-          
-          <rect x="740" y="466" width="28" height="16" rx="4" fill="#1a4a3a" stroke="#4cb07c" stroke-width="1"/><text x="754" y="478" text-anchor="middle" fill="#b8e0c8" font-size="9">🏁</text>
-          <text x="773" y="478" fill="#8ab4ba" font-size="10">Финальный проект</text>
-          
-          <circle cx="60" cy="493" r="3" fill="#e8a838" class="pulse-dot"/>
-          <text x="70" y="496" fill="#5a8a92" font-size="9">Контроль качества</text>
-        </svg>
-        <p>Stack: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</p>
+        <h2>Карта репозитория</h2>
+        <p>Стек: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</p>
         <ul><li>.crabbox.yaml</li>
 <li>.github/actionlint.yaml</li>
 <li>.github/dependabot.yml</li>
@@ -207,87 +77,87 @@
       </section>
       
             <section class="module" id="module-1">
-              <h2>1. Orientation and project purpose</h2>
-              <ul><li><label><input type='checkbox' data-progress='m1l1'> What problem the repository solves</label></li>
-<li><label><input type='checkbox' data-progress='m1l2'> Repository map and important entry points</label></li>
-<li><label><input type='checkbox' data-progress='m1l3'> How to run or inspect the project locally</label></li></ul>
+              <h2>1. Ориентация и назначение проекта</h2>
+              <ul><li><label><input type='checkbox' data-progress='m1l1'> Какую проблему решает репозиторий</label></li>
+<li><label><input type='checkbox' data-progress='m1l2'> Карта репозитория и ключевые точки входа</label></li>
+<li><label><input type='checkbox' data-progress='m1l3'> Как запустить или проинспектировать проект локально</label></li></ul>
               <details>
-                <summary>Practice task</summary>
-                <p>Choose one relevant file from the repository map, make a small improvement plan, and define how you would verify it.</p>
+                <summary>Практическое задание</summary>
+                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
               </details>
               <details>
-                <summary>Quiz</summary>
-                <p>What is the main concept of this module, and what risk would you check before production use?</p>
+                <summary>Вопрос для самопроверки</summary>
+                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
               </details>
             </section>
             
             <section class="module" id="module-2">
-              <h2>2. Architecture and core concepts</h2>
-              <ul><li><label><input type='checkbox' data-progress='m2l1'> Main components and responsibilities</label></li>
-<li><label><input type='checkbox' data-progress='m2l2'> Data flow and integration points</label></li>
-<li><label><input type='checkbox' data-progress='m2l3'> Technology stack: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</label></li></ul>
+              <h2>2. Архитектура и ключевые концепции</h2>
+              <ul><li><label><input type='checkbox' data-progress='m2l1'> Основные компоненты и их ответственность</label></li>
+<li><label><input type='checkbox' data-progress='m2l2'> Поток данных и точки интеграции</label></li>
+<li><label><input type='checkbox' data-progress='m2l3'> Технологический стек: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</label></li></ul>
               <details>
-                <summary>Practice task</summary>
-                <p>Choose one relevant file from the repository map, make a small improvement plan, and define how you would verify it.</p>
+                <summary>Практическое задание</summary>
+                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
               </details>
               <details>
-                <summary>Quiz</summary>
-                <p>What is the main concept of this module, and what risk would you check before production use?</p>
+                <summary>Вопрос для самопроверки</summary>
+                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
               </details>
             </section>
             
             <section class="module" id="module-3">
-              <h2>3. Implementation walkthrough</h2>
-              <ul><li><label><input type='checkbox' data-progress='m3l1'> Key source files and modules</label></li>
-<li><label><input type='checkbox' data-progress='m3l2'> Configuration and dependency model</label></li>
-<li><label><input type='checkbox' data-progress='m3l3'> Error handling and operational assumptions</label></li></ul>
+              <h2>3. Обзор реализации</h2>
+              <ul><li><label><input type='checkbox' data-progress='m3l1'> Ключевые исходные файлы и модули</label></li>
+<li><label><input type='checkbox' data-progress='m3l2'> Конфигурация и модель зависимостей</label></li>
+<li><label><input type='checkbox' data-progress='m3l3'> Обработка ошибок и эксплуатационные допущения</label></li></ul>
               <details>
-                <summary>Practice task</summary>
-                <p>Choose one relevant file from the repository map, make a small improvement plan, and define how you would verify it.</p>
+                <summary>Практическое задание</summary>
+                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
               </details>
               <details>
-                <summary>Quiz</summary>
-                <p>What is the main concept of this module, and what risk would you check before production use?</p>
+                <summary>Вопрос для самопроверки</summary>
+                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
               </details>
             </section>
             
             <section class="module" id="module-4">
-              <h2>4. Testing and quality</h2>
-              <ul><li><label><input type='checkbox' data-progress='m4l1'> Existing tests</label></li>
-<li><label><input type='checkbox' data-progress='m4l2'> Quality signals</label></li>
-<li><label><input type='checkbox' data-progress='m4l3'> How to add a regression test</label></li></ul>
+              <h2>4. Тестирование и качество</h2>
+              <ul><li><label><input type='checkbox' data-progress='m4l1'> Существующие тесты</label></li>
+<li><label><input type='checkbox' data-progress='m4l2'> Сигналы качества</label></li>
+<li><label><input type='checkbox' data-progress='m4l3'> Как добавить регрессионный тест</label></li></ul>
               <details>
-                <summary>Practice task</summary>
-                <p>Choose one relevant file from the repository map, make a small improvement plan, and define how you would verify it.</p>
+                <summary>Практическое задание</summary>
+                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
               </details>
               <details>
-                <summary>Quiz</summary>
-                <p>What is the main concept of this module, and what risk would you check before production use?</p>
+                <summary>Вопрос для самопроверки</summary>
+                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
               </details>
             </section>
             
             <section class="module" id="module-5">
-              <h2>5. Practice and extension</h2>
-              <ul><li><label><input type='checkbox' data-progress='m5l1'> Small guided change</label></li>
-<li><label><input type='checkbox' data-progress='m5l2'> Test or verification strategy</label></li>
-<li><label><input type='checkbox' data-progress='m5l3'> Production readiness checklist</label></li></ul>
+              <h2>5. Практика и развитие</h2>
+              <ul><li><label><input type='checkbox' data-progress='m5l1'> Небольшое направляемое изменение</label></li>
+<li><label><input type='checkbox' data-progress='m5l2'> Стратегия тестирования и верификации</label></li>
+<li><label><input type='checkbox' data-progress='m5l3'> Чек-лист готовности к продакшену</label></li></ul>
               <details>
-                <summary>Practice task</summary>
-                <p>Choose one relevant file from the repository map, make a small improvement plan, and define how you would verify it.</p>
+                <summary>Практическое задание</summary>
+                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
               </details>
               <details>
-                <summary>Quiz</summary>
-                <p>What is the main concept of this module, and what risk would you check before production use?</p>
+                <summary>Вопрос для самопроверки</summary>
+                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
               </details>
             </section>
             
       <section class="panel">
-        <h2>Final Project</h2>
-        <p>Build a documented improvement for openclaw: add one useful feature, test it, and explain the operational impact.</p>
+        <h2>Финальный проект</h2>
+        <p>Соберите документированное улучшение для OpenClaw: добавьте одну полезную функцию, протестируйте её и объясните эксплуатационный эффект.</p>
       </section>
       <section class="panel">
-        <h2>Quality Gate</h2>
-        <p>Score: 0.75</p>
+        <h2>Контроль качества</h2>
+        <p>Оценка: 0.75</p>
         <ul><li class='true'>repository_analyzed: pass</li>
 <li class='true'>readme_or_docs_used: pass</li>
 <li class='true'>source_or_config_used: pass</li>
@@ -315,7 +185,7 @@
       const done = boxes.filter(box => box.checked).length;
       const pct = boxes.length ? Math.round(done / boxes.length * 100) : 0;
       document.getElementById('bar').style.width = pct + '%';
-      document.getElementById('progressText').textContent = pct + '% complete';
+      document.getElementById('progressText').textContent = pct + '% завершено';
       const saved = Object.fromEntries(boxes.map(box => [box.dataset.progress, box.checked]));
       localStorage.setItem(key, JSON.stringify(saved));
     }
