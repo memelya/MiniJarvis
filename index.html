@@ -3,198 +3,484 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🦞 OpenClaw — Персональный ИИ-ассистент</title>
+  <title>NeuroSprint — AI для specs маленьких команд</title>
+  <meta name="description" content="NeuroSprint превращает сырые идеи задач в готовые product specs, чек-листы разработки и acceptance criteria. Для тимлидов, продактов и основателей SaaS.">
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; color: #172026; background: #f5f7f8; }
-    header { padding: 32px; background: #12343b; color: white; }
-    .layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; max-width: 1180px; margin: 0 auto; padding: 24px; }
-    nav { position: sticky; top: 16px; align-self: start; display: grid; gap: 8px; }
-    nav a { color: #12343b; text-decoration: none; padding: 8px; border-left: 3px solid #2f8f9d; background: white; }
-    .module, .panel { background: white; border: 1px solid #d9e2e5; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-    .progress { height: 12px; background: #d9e2e5; border-radius: 999px; overflow: hidden; }
-    .bar { height: 100%; width: 0; background: #2f8f9d; transition: width .2s ease; }
-    button { border: 0; border-radius: 6px; background: #12343b; color: white; padding: 10px 14px; cursor: pointer; }
-    code, pre { background: #eef3f4; border-radius: 6px; padding: 2px 5px; }
-    .true { color: #1c7c54; } .false { color: #9b2c2c; }
-    @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } nav { position: static; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc; color: #0f172a; line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      background: #0f172a; color: #f1f5f9; padding: 100px 0 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 70% 30%, rgba(59,130,246,.12), transparent);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15;
+      max-width: 720px; letter-spacing: -.02em;
+    }
+    .hero h1 span { color: #60a5fa; }
+    .hero p {
+      font-size: 1.125rem; color: #94a3b8; margin: 20px 0 32px; max-width: 560px;
+    }
+    .hero-form { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-form input {
+      padding: 12px 18px; border: 1px solid #334155; border-radius: 8px;
+      background: #1e293b; color: #f1f5f9; font-size: 1rem; min-width: 260px;
+      outline: none; transition: border-color .2s;
+    }
+    .hero-form input:focus { border-color: #60a5fa; }
+    .hero-form input::placeholder { color: #64748b; }
+    .btn-primary {
+      padding: 12px 28px; border: 0; border-radius: 8px;
+      background: #2563eb; color: #fff; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .hero-note { font-size: .875rem; color: #64748b; margin-top: 12px; }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; text-align: center;
+      margin-bottom: 16px; letter-spacing: -.015em;
+    }
+    .section-sub {
+      text-align: center; color: #475569; max-width: 600px; margin: 0 auto 48px;
+      font-size: 1.05rem;
+    }
+
+    /* Problem */
+    #problem { background: #fff; }
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .problem-list { list-style: none; display: grid; gap: 20px; }
+    .problem-list li {
+      display: flex; gap: 14px; align-items: flex-start;
+      opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .problem-list li.visible { opacity: 1; transform: translateY(0); }
+    .problem-icon {
+      width: 40px; height: 40px; border-radius: 10px; background: #eff6ff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .problem-list strong { display: block; font-size: 1rem; margin-bottom: 2px; }
+    .problem-list p { color: #475569; font-size: .925rem; }
+    .problem-visual {
+      background: #f1f5f9; border-radius: 16px; padding: 32px; display: grid; gap: 16px;
+    }
+    .problem-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;
+      font-size: .875rem; color: #475569;
+      opacity: 0; transform: translateX(20px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .problem-card.visible { opacity: 1; transform: translateX(0); }
+    .problem-card strong { color: #0f172a; }
+    .problem-card .badge {
+      display: inline-block; font-size: .75rem; padding: 2px 8px; border-radius: 6px;
+      background: #fef2f2; color: #b91c1c; margin-top: 6px;
+    }
+
+    /* How It Works */
+    #how { background: #fff; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; counter-reset: step; }
+    .step {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;
+      padding: 28px 20px; text-align: center;
+      opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .step.visible { opacity: 1; transform: translateY(0); }
+    .step:hover { border-color: #93c5fd; box-shadow: 0 4px 20px rgba(37,99,235,.08); }
+    .step-num {
+      width: 40px; height: 40px; margin: 0 auto 14px; border-radius: 50%;
+      background: #2563eb; color: #fff; font-weight: 700; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step h3 { font-size: 1rem; margin-bottom: 6px; }
+    .step p { color: #475569; font-size: .875rem; }
+    .step-icon { font-size: 1.6rem; margin-bottom: 6px; display: block; }
+    .arrow-step { display: none; }
+
+    /* Benefits */
+    #benefits { background: #fff; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .benefit {
+      border: 1px solid #e2e8f0; border-radius: 14px; padding: 32px 24px;
+      transition: border-color .25s, box-shadow .25s;
+      opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease, border-color .25s, box-shadow .25s;
+    }
+    .benefit.visible { opacity: 1; transform: translateY(0); }
+    .benefit:hover { border-color: #93c5fd; box-shadow: 0 4px 20px rgba(37,99,235,.08); }
+    .benefit-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .benefit h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .benefit p { color: #475569; font-size: .925rem; }
+
+    /* Example Spec */
+    #example { background: #f1f5f9; }
+    .spec-preview {
+      max-width: 720px; margin: 0 auto;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+      padding: 36px 32px;
+      opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .spec-preview.visible { opacity: 1; transform: translateY(0); }
+    .spec-preview h3 { font-size: 1.3rem; margin-bottom: 4px; }
+    .spec-meta { color: #64748b; font-size: .85rem; margin-bottom: 20px; }
+    .spec-section { margin-bottom: 18px; }
+    .spec-section h4 { font-size: .9rem; color: #2563eb; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+    .spec-section ul { list-style: disc; padding-left: 20px; color: #334155; font-size: .925rem; }
+    .spec-section ul li { margin-bottom: 3px; }
+    .spec-tag {
+      display: inline-block; font-size: .75rem; padding: 2px 10px; border-radius: 6px;
+      background: #e0f2fe; color: #0369a1; margin: 0 4px 4px 0;
+    }
+
+    /* Trust */
+    #trust { background: #fff; }
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .trust-item {
+      text-align: center; padding: 28px 16px;
+      opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease;
+    }
+    .trust-item.visible { opacity: 1; transform: translateY(0); }
+    .trust-item .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .trust-item h3 { font-size: 1rem; margin-bottom: 6px; }
+    .trust-item p { color: #475569; font-size: .875rem; }
+
+    /* FAQ */
+    #faq { background: #f8fafc; }
+    .faq-list { max-width: 700px; margin: 0 auto; display: grid; gap: 12px; }
+    .faq-item {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;
+    }
+    .faq-q {
+      padding: 16px 20px; font-weight: 600; cursor: pointer; display: flex;
+      justify-content: space-between; align-items: center; user-select: none;
+      transition: background .15s;
+    }
+    .faq-q:hover { background: #f8fafc; }
+    .faq-q::after {
+      content: '+'; font-size: 1.2rem; color: #94a3b8; transition: transform .2s;
+    }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease;
+      padding: 0 20px; color: #475569; font-size: .925rem;
+    }
+    .faq-item.open .faq-a {
+      max-height: 200px; padding: 0 20px 16px;
+    }
+
+    /* Final CTA */
+    #final-cta {
+      background: #0f172a; color: #f1f5f9; text-align: center; padding: 80px 0;
+    }
+    #final-cta h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; }
+    #final-cta p { color: #94a3b8; max-width: 500px; margin: 12px auto 28px; }
+    #final-cta .btn-primary { font-size: 1.1rem; padding: 14px 36px; }
+
+    /* Footer */
+    footer {
+      background: #0a0f1a; color: #64748b; text-align: center; padding: 24px 0;
+      font-size: .85rem;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+      .problem-list li, .problem-card, .step, .benefit, .spec-preview, .trust-item {
+        opacity: 1 !important; transform: none !important;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .hero { padding: 64px 0 56px; }
+      .hero-form { flex-direction: column; }
+      .hero-form input { min-width: 0; width: 100%; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .benefits-grid, .trust-grid { grid-template-columns: 1fr; }
+      section { padding: 56px 0; }
+    }
+    @media (max-width: 480px) {
+      .steps { grid-template-columns: 1fr; }
+      .container { padding: 0 16px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🦞 OpenClaw — Персональный ИИ-ассистент</h1>
-    <p>https://github.com/openclaw/openclaw</p>
-    <p>Уровень: средний | Аудитория: разработчики и тех. проджект-менеджеры | Длительность: гибкая</p>
-  </header>
-  <main class="layout">
-    <nav>
-      <strong>Модули</strong>
-      <a href='#module-1'>1. Ориентация и назначение проекта</a>
-<a href='#module-2'>2. Архитектура и ключевые концепции</a>
-<a href='#module-3'>3. Обзор реализации</a>
-<a href='#module-4'>4. Тестирование и качество</a>
-<a href='#module-5'>5. Практика и развитие</a>
-      <button id="reset">Сбросить прогресс</button>
-    </nav>
-    <div>
-      <section class="panel">
-        <h2>Прогресс</h2>
-        <div class="progress"><div class="bar" id="bar"></div></div>
-        <p id="progressText">0% завершено</p>
-      </section>
-      <section class="panel">
-        <h2>Карта репозитория</h2>
-        <p>Стек: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</p>
-        <ul><li>.crabbox.yaml</li>
-<li>.github/actionlint.yaml</li>
-<li>.github/dependabot.yml</li>
-<li>.github/images/live-media-runner/Dockerfile</li>
-<li>.github/labeler.yml</li>
-<li>.github/package-trusted-sources.json</li>
-<li>.github/pull_request_template.md</li>
-<li>.github/workflows/auto-response.yml</li>
-<li>.github/workflows/ci-build-artifacts-testbox.yml</li>
-<li>.github/workflows/ci-check-arm-testbox.yml</li>
-<li>.github/workflows/ci-check-testbox.yml</li>
-<li>.github/workflows/ci.yml</li>
-<li>.github/workflows/clawsweeper-dispatch.yml</li>
-<li>.github/workflows/codeql-android-critical-security.yml</li>
-<li>.github/workflows/codeql-critical-quality.yml</li>
-<li>.github/workflows/codeql-macos-critical-security.yml</li>
-<li>.github/workflows/codeql.yml</li>
-<li>.github/workflows/control-ui-locale-refresh.yml</li>
-<li>.github/workflows/crabbox-hydrate.yml</li>
-<li>.github/workflows/dependency-guard.yml</li>
-<li>.github/workflows/docker-release.yml</li>
-<li>.github/workflows/docs-agent.yml</li>
-<li>.github/workflows/docs-sync-publish.yml</li>
-<li>.github/workflows/docs-translate-trigger-release.yml</li>
-<li>.github/workflows/docs.yml</li>
-<li>.github/workflows/duplicate-after-merge.yml</li>
-<li>.github/workflows/full-release-validation.yml</li>
-<li>.github/workflows/install-smoke.yml</li>
-<li>.github/workflows/ios-periphery-comment.yml</li>
-<li>.github/workflows/ios-periphery.yml</li></ul>
-      </section>
-      
-            <section class="module" id="module-1">
-              <h2>1. Ориентация и назначение проекта</h2>
-              <ul><li><label><input type='checkbox' data-progress='m1l1'> Какую проблему решает репозиторий</label></li>
-<li><label><input type='checkbox' data-progress='m1l2'> Карта репозитория и ключевые точки входа</label></li>
-<li><label><input type='checkbox' data-progress='m1l3'> Как запустить или проинспектировать проект локально</label></li></ul>
-              <details>
-                <summary>Практическое задание</summary>
-                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
-              </details>
-              <details>
-                <summary>Вопрос для самопроверки</summary>
-                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
-              </details>
-            </section>
-            
-            <section class="module" id="module-2">
-              <h2>2. Архитектура и ключевые концепции</h2>
-              <ul><li><label><input type='checkbox' data-progress='m2l1'> Основные компоненты и их ответственность</label></li>
-<li><label><input type='checkbox' data-progress='m2l2'> Поток данных и точки интеграции</label></li>
-<li><label><input type='checkbox' data-progress='m2l3'> Технологический стек: Python, JavaScript/TypeScript, Go, Java/Kotlin, Docker, CI/CD</label></li></ul>
-              <details>
-                <summary>Практическое задание</summary>
-                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
-              </details>
-              <details>
-                <summary>Вопрос для самопроверки</summary>
-                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
-              </details>
-            </section>
-            
-            <section class="module" id="module-3">
-              <h2>3. Обзор реализации</h2>
-              <ul><li><label><input type='checkbox' data-progress='m3l1'> Ключевые исходные файлы и модули</label></li>
-<li><label><input type='checkbox' data-progress='m3l2'> Конфигурация и модель зависимостей</label></li>
-<li><label><input type='checkbox' data-progress='m3l3'> Обработка ошибок и эксплуатационные допущения</label></li></ul>
-              <details>
-                <summary>Практическое задание</summary>
-                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
-              </details>
-              <details>
-                <summary>Вопрос для самопроверки</summary>
-                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
-              </details>
-            </section>
-            
-            <section class="module" id="module-4">
-              <h2>4. Тестирование и качество</h2>
-              <ul><li><label><input type='checkbox' data-progress='m4l1'> Существующие тесты</label></li>
-<li><label><input type='checkbox' data-progress='m4l2'> Сигналы качества</label></li>
-<li><label><input type='checkbox' data-progress='m4l3'> Как добавить регрессионный тест</label></li></ul>
-              <details>
-                <summary>Практическое задание</summary>
-                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
-              </details>
-              <details>
-                <summary>Вопрос для самопроверки</summary>
-                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
-              </details>
-            </section>
-            
-            <section class="module" id="module-5">
-              <h2>5. Практика и развитие</h2>
-              <ul><li><label><input type='checkbox' data-progress='m5l1'> Небольшое направляемое изменение</label></li>
-<li><label><input type='checkbox' data-progress='m5l2'> Стратегия тестирования и верификации</label></li>
-<li><label><input type='checkbox' data-progress='m5l3'> Чек-лист готовности к продакшену</label></li></ul>
-              <details>
-                <summary>Практическое задание</summary>
-                <p>Выберите один файл из карты репозитория, составьте план небольшого улучшения и опишите, как вы его проверите.</p>
-              </details>
-              <details>
-                <summary>Вопрос для самопроверки</summary>
-                <p>В чём основная концепция этого модуля и какой риск стоит проверить перед продакшеном?</p>
-              </details>
-            </section>
-            
-      <section class="panel">
-        <h2>Финальный проект</h2>
-        <p>Соберите документированное улучшение для OpenClaw: добавьте одну полезную функцию, протестируйте её и объясните эксплуатационный эффект.</p>
-      </section>
-      <section class="panel">
-        <h2>Контроль качества</h2>
-        <p>Оценка: 0.75</p>
-        <ul><li class='true'>repository_analyzed: pass</li>
-<li class='true'>readme_or_docs_used: pass</li>
-<li class='true'>source_or_config_used: pass</li>
-<li class='true'>tests_considered: pass</li>
-<li class='true'>has_4_to_8_modules: pass</li>
-<li class='true'>has_practical_tasks: pass</li>
-<li class='true'>has_quizzes: pass</li>
-<li class='true'>has_final_project: pass</li>
-<li class='true'>has_html: pass</li>
-<li class='false'>has_markdown: review</li>
-<li class='false'>has_pdf: review</li>
-<li class='false'>has_zip: review</li></ul>
-      </section>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <h1>Из сырой идеи — <span>готовый spec</span> за минуту</h1>
+    <p>
+      NeuroSprint — AI-помощник для небольших IT-команд. Опиши задачу своими словами — 
+      получи product spec, чек-лист разработки и acceptance criteria. Без шаблонов и совещаний.
+    </p>
+    <form class="hero-form" onsubmit="event.preventDefault();alert('Спасибо! Мы свяжемся, когда откроется ранний доступ.');">
+      <input type="email" placeholder="your@email.com" required aria-label="Email">
+      <button type="submit" class="btn-primary">Получить ранний доступ</button>
+    </form>
+    <p class="hero-note">🔒 Никакого спама. Отписка в один клик.</p>
+  </div>
+</section>
+
+<!-- Problem -->
+<section id="problem">
+  <div class="container">
+    <h2 class="section-title">Знакомо?</h2>
+    <p class="section-sub">В маленьких командах каждый час на уточнение требований — это час, который вы не пишете код.</p>
+    <div class="problem-grid">
+      <ul class="problem-list">
+        <li>
+          <div class="problem-icon">🤷</div>
+          <div><strong>Размытые задачи</strong><p>«Сделай как в том приложении» — и полдня уточнений.</p></div>
+        </li>
+        <li>
+          <div class="problem-icon">📝</div>
+          <div><strong>Никто не пишет ТЗ</strong><p>Продукт меняется быстрее, чем успеваешь оформить spec.</p></div>
+        </li>
+        <li>
+          <div class="problem-icon">🔄</div>
+          <div><strong>Бесконечные правки</strong><p>Разработчик сделал не то — продакт не то имел в виду.</p></div>
+        </li>
+      </ul>
+      <div class="problem-visual">
+        <div class="problem-card">
+          <strong>ChatGPT-диалог, среда 14:23</strong><br>
+          «нужна сортировка по дате»<br>
+          <span class="badge">➜ 4 уточняющих сообщения</span>
+        </div>
+        <div class="problem-card">
+          <strong>GitHub issue #142</strong><br>
+          «Добавить поиск (как в Trello)»<br>
+          <span class="badge">Статус: waiting for clarification (3 дня)</span>
+        </div>
+        <div class="problem-card">
+          <strong>Правка после ревью</strong><br>
+          «Это не та сортировка, я имел в виду по приоритету, а не по дате»<br>
+          <span class="badge">➜ +4 часа переработки</span>
+        </div>
+      </div>
     </div>
-  </main>
-  <script>
-    const key = 'course-progress:' + location.pathname.split('/').pop();
-    const boxes = [...document.querySelectorAll('[data-progress]')];
-    function load() {
-      const saved = JSON.parse(localStorage.getItem(key) || '{}');
-      boxes.forEach(box => box.checked = !!saved[box.dataset.progress]);
-      update();
-    }
-    function update() {
-      const done = boxes.filter(box => box.checked).length;
-      const pct = boxes.length ? Math.round(done / boxes.length * 100) : 0;
-      document.getElementById('bar').style.width = pct + '%';
-      document.getElementById('progressText').textContent = pct + '% завершено';
-      const saved = Object.fromEntries(boxes.map(box => [box.dataset.progress, box.checked]));
-      localStorage.setItem(key, JSON.stringify(saved));
-    }
-    boxes.forEach(box => box.addEventListener('change', update));
-    document.getElementById('reset').addEventListener('click', () => {
-      boxes.forEach(box => box.checked = false);
-      update();
-    });
-    load();
-  </script>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how">
+  <div class="container">
+    <h2 class="section-title">Как это работает</h2>
+    <p class="section-sub">Четыре шага от идеи до готового к разработке документа.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-icon">💡</span>
+        <div class="step-num">1</div>
+        <h3>Опиши идею</h3>
+        <p>Пиши как есть: «Надо добавить фильтр по статусу в список задач».</p>
+      </div>
+      <div class="step">
+        <span class="step-icon">📄</span>
+        <div class="step-num">2</div>
+        <h3>Product spec</h3>
+        <p>NeuroSprint оформит задачу в структурированный документ с контекстом.</p>
+      </div>
+      <div class="step">
+        <span class="step-icon">✅</span>
+        <div class="step-num">3</div>
+        <h3>Чек-лист</h3>
+        <p>Пошаговый план разработки: от бэкенда до UI и тестов.</p>
+      </div>
+      <div class="step">
+        <span class="step-icon">🎯</span>
+        <div class="step-num">4</div>
+        <h3>Acceptance criteria</h3>
+        <p>Готовые критерии приёмки — разработчик знает, когда задача готова.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits -->
+<section id="benefits">
+  <div class="container">
+    <h2 class="section-title">Почему NeuroSprint</h2>
+    <p class="section-sub">Никаких джунов-копирайтеров. Только готовый к работе документ.</p>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <span class="benefit-icon">⚡</span>
+        <h3>Spec за 30 секунд</h3>
+        <p>Вместо 20-минутного созвона — готовый документ. Просто вставь в Linear / Jira / GitHub.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🎯</span>
+        <h3>Минимум недопонимания</h3>
+        <p>Acceptance criteria исключают разночтения. Разработчик и продакт говорят на одном языке.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">📉</span>
+        <h3>Меньше правок на ревью</h3>
+        <p>Когда spec чёткий — код реже уходит в переделку. Команда движется быстрее.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Example Spec -->
+<section id="example">
+  <div class="container">
+    <h2 class="section-title">Как выглядит результат</h2>
+    <p class="section-sub">Одна сырая строка → готовый mini-spec. Вот пример:</p>
+    <div class="spec-preview">
+      <h3>Фильтр задач по статусу</h3>
+      <div class="spec-meta">Создано NeuroSprint • 28 июня 2026 • 3 мин. чтения</div>
+      <div class="spec-section">
+        <h4>📋 Product spec</h4>
+        <ul>
+          <li>На странице списка задач добавить выпадающий фильтр по статусу: «Все», «Открыто», «В работе», «Готово»</li>
+          <li>Фильтр применяется мгновенно, без перезагрузки страницы</li>
+          <li>Выбранный статус сохраняется в URL (query param) для шаринга</li>
+        </ul>
+      </div>
+      <div class="spec-section">
+        <h4>📌 Чек-лист разработки</h4>
+        <ul>
+          <li>Бэкенд: endpoint GET /tasks?status=open|in_progress|done (или 400)</li>
+          <li>Фронтенд: компонент Select с четырьмя опциями</li>
+          <li>Обновление URL через history.replaceState</li>
+          <li>Юнит-тест на фильтрацию; e2e-тест на выбор опции</li>
+          <li>Обработка пустого результата (сообщение «Нет задач»)</li>
+        </ul>
+      </div>
+      <div class="spec-section">
+        <h4>✅ Acceptance criteria</h4>
+        <ul>
+          <li>Пользователь выбирает «В работе» → показываются только задачи в работе</li>
+          <li>Параметр ?status=in_progress появляется в адресной строке</li>
+          <li>При переходе по ссылке с ?status=done фильтр устанавливается в «Готово»</li>
+          <li>При пустом результате показывается заглушка, а не пустой список</li>
+          <li>Сброс фильтра возвращает все задачи</li>
+        </ul>
+      </div>
+      <div style="margin-top:14px;">
+        <span class="spec-tag">#frontend</span>
+        <span class="spec-tag">#api</span>
+        <span class="spec-tag">#фильтрация</span>
+        <span class="spec-tag">#средний-приоритет</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust -->
+<section id="trust">
+  <div class="container">
+    <h2 class="section-title">Безопасность и доверие</h2>
+    <p class="section-sub">Ваши данные принадлежат только вам.</p>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <span class="icon">🔒</span>
+        <h3>Шифрование end-to-end</h3>
+        <p>Все specs шифруются на передаче и на хранении. Никто, кроме вас, не видит содержимое.</p>
+      </div>
+      <div class="trust-item">
+        <span class="icon">🗑️</span>
+        <h3>Удаление без следа</h3>
+        <p>Удалили spec — он исчезает с наших серверов в течение 24 часов. Без копий и логов.</p>
+      </div>
+      <div class="trust-item">
+        <span class="icon">🏢</span>
+        <h3>Не используем ваши данные для обучения</h3>
+        <p>Мы не тренируем модели на ваших specs. Ваш код и идеи — ваше интеллектуальное право.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <h2 class="section-title">Частые вопросы</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q">Чем NeuroSprint отличается от ChatGPT с промптом?</div>
+        <div class="faq-a">
+          ChatGPT выдаёт красивый текст, но не знает структуру product spec. NeuroSprint обучен на реальных specs, знает, какие секции нужны для разработки, и всегда выдаёт единый формат: spec → checklist → AC. Плюс мы не храним ваши данные для обучения моделей.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Подходит ли для команды из одного человека?</div>
+        <div class="faq-a">
+          Да. NeuroSprint особенно полезен соло-разработчикам и основателям: вы пишете код, а не документацию. Spec помогает не забыть детали и быстрее возвращаться к задаче через неделю.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Какие форматы интеграции планируются?</div>
+        <div class="faq-a">
+          В первую очередь — копирование в буфер и экспорт в Markdown. Затем — прямая интеграция с Linear, GitHub Issues и Jira. Ранний доступ даст вам голос в выборе следующих интеграций.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Сколько будет стоить?</div>
+        <div class="faq-a">
+          Для ранних пользователей — бесплатный доступ на время беты. После запуска планируется простая подписка: $15/мес для команды до 5 человек. Безлимит на specs.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section id="final-cta">
+  <div class="container">
+    <h2>Готовы попробовать?</h2>
+    <p>Оставьте email — мы пришлём приглашение первыми, как только откроем доступ.</p>
+    <form onsubmit="event.preventDefault();alert('Спасибо! Мы напишем вам, когда NeuroSprint будет готов.');">
+      <input type="email" placeholder="your@email.com" required aria-label="Email" style="padding:12px 18px;border:1px solid #334155;border-radius:8px;background:#1e293b;color:#f1f5f9;font-size:1rem;min-width:260px;margin-right:10px;outline:none;">
+      <button type="submit" class="btn-primary">Получить ранний доступ</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    NeuroSprint © 2026 • Built for small teams
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .15 });
+
+document.querySelectorAll('.problem-list li, .problem-card, .step, .benefit, .spec-preview, .trust-item')
+  .forEach(el => observer.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+</script>
 </body>
 </html>
