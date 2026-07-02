@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniTaskTrack — рабочая доска задач</title>
+  <meta name="description" content="Рабочий прототип MiniTaskTrack: задачи, product specs, checklist и acceptance criteria на одной доске.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5f0;
+      --panel: #ffffff;
+      --panel-soft: #fbfaf6;
+      --ink: #1f2523;
+      --muted: #68716d;
+      --line: #dedbd1;
+      --line-strong: #c8c2b7;
+      --green: #2f6f57;
+      --green-soft: #e2eee7;
+      --blue: #315f8a;
+      --blue-soft: #e4edf4;
+      --amber: #8a6424;
+      --amber-soft: #f3ead8;
+      --red: #9a4a40;
+      --red-soft: #f5e5e1;
+      --shadow: 0 18px 45px rgba(39, 42, 36, .10);
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(246,245,240,0) 280px),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      letter-spacing: 0;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, .66);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #f0ede4;
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .nav-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 18px 0 8px;
+    }
+
+    .nav-button {
+      width: 100%;
+      min-height: 38px;
+      border: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .nav-button.active {
+      background: var(--green-soft);
+      color: #234d3e;
+      font-weight: 700;
+    }
+
+    .nav-button .count {
+      min-width: 24px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(255,255,255,.7);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .health {
+      margin-top: 24px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+    }
+
+    .health-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .health-row span:first-child { color: var(--muted); }
+
+    .main {
+      min-width: 0;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.06;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      max-width: 780px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(39, 42, 36, .10);
+    }
+
+    .btn.primary {
+      background: #243c34;
+      border-color: #243c34;
+      color: white;
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: #e0bbb5;
+      background: var(--red-soft);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(230px, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .search, .select {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 9px 11px;
+      width: 100%;
+    }
+
+    .segmented {
+      display: flex;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+      min-height: 40px;
+    }
+
+    .segmented button {
+      border: 0;
+      background: transparent;
+      padding: 8px 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .segmented button.active {
+      background: #ece8de;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .column {
+      min-height: 520px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.58);
+      padding: 10px;
+    }
+
+    .column.drag-over {
+      border-color: var(--green);
+      background: #eef5ef;
+    }
+
+    .column-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 32px;
+      margin-bottom: 8px;
+    }
+
+    .column-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .dot.todo { background: var(--amber); }
+    .dot.spec { background: var(--blue); }
+    .dot.build { background: var(--green); }
+    .dot.done { background: #60706a; }
+
+    .column-count {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 9px;
+      min-height: 430px;
+    }
+
+    .task {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 8px 24px rgba(39, 42, 36, .07);
+      padding: 11px;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .task:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(39, 42, 36, .10);
+    }
+
+    .task.dragging {
+      opacity: .55;
+      transform: scale(.98);
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .task-title {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 780;
+    }
+
+    .task-menu {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius);
+      flex: 0 0 auto;
+    }
+
+    .task-menu:hover {
+      background: #f1eee6;
+      color: var(--ink);
+    }
+
+    .task-desc {
+      margin: 7px 0 9px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      max-width: 100%;
+      min-height: 23px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #f1eee6;
+      color: #4f5854;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .chip.high { background: var(--red-soft); color: var(--red); }
+    .chip.medium { background: var(--amber-soft); color: var(--amber); }
+    .chip.low { background: var(--green-soft); color: var(--green); }
+    .chip.ai { background: var(--blue-soft); color: var(--blue); }
+
+    .task-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .meta-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 7px;
+      background: var(--panel-soft);
+      min-width: 0;
+    }
+
+    .meta-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 3px;
+    }
+
+    .meta-box strong {
+      display: block;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .inspector {
+      position: sticky;
+      top: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .inspector h2 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .inspector p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .spec-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      padding: 11px;
+      margin-top: 10px;
+    }
+
+    .spec-box h3 {
+      margin: 0 0 7px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+
+    .spec-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #38403c;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(31, 37, 35, .32);
+      z-index: 20;
+    }
+
+    .drawer.open {
+      display: grid;
+    }
+
+    .modal {
+      width: min(720px, 100%);
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 28px 70px rgba(31,37,35,.28);
+      padding: 16px;
+      animation: modalIn .18s ease both;
+    }
+
+    @keyframes modalIn {
+      from { transform: translateY(8px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--ink);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .field.wide {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--ink);
+      padding: 9px 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .empty {
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      background: rgba(255,255,255,.42);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      background: #243c34;
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 10px 13px;
+      box-shadow: var(--shadow);
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 30;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .workspace { grid-template-columns: 1fr; }
+      .inspector { position: static; }
+      .board {
+        overflow-x: auto;
+        grid-template-columns: repeat(4, minmax(240px, 1fr));
+        padding-bottom: 4px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .main { padding: 14px; }
+      .topbar, .toolbar { grid-template-columns: 1fr; }
+      .actions { justify-content: stretch; }
+      .actions .btn, .toolbar .btn { width: 100%; }
+      .segmented { width: 100%; }
+      .segmented button { flex: 1; }
+      .board {
+        display: grid;
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+      .column { min-height: auto; }
+      .task-list { min-height: 80px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .sidebar { padding: 16px 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Навигация проекта">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">M</div>
+        <div>
+          <strong>MiniTaskTrack</strong>
+          <span>Project board</span>
+        </div>
+      </div>
+
+      <div class="nav-label">Рабочее пространство</div>
+      <button class="nav-button active" type="button">
+        <span>Доска задач</span>
+        <span class="count" id="allCount">0</span>
+      </button>
+      <button class="nav-button" type="button" id="quickSpecNav">
+        <span>Spec очередь</span>
+        <span class="count" id="specCountNav">0</span>
+      </button>
+      <button class="nav-button" type="button" id="releaseNav">
+        <span>Release check</span>
+        <span class="count" id="releaseCount">0</span>
+      </button>
+
+      <div class="nav-label">Состояние</div>
+      <div class="health">
+        <div class="health-row">
+          <span>Готовность</span>
+          <strong id="readyPercent">0%</strong>
+        </div>
+        <div class="health-row">
+          <span>В работе</span>
+          <strong id="buildCount">0</strong>
+        </div>
+        <div class="health-row">
+          <span>Критичные</span>
+          <strong id="highCount">0</strong>
+        </div>
+        <div class="health-row">
+          <span>Хранилище</span>
+          <strong>Local</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Задачи, specs и критерии приемки</h1>
+          <p class="subtitle">Рабочая доска для маленькой SaaS-команды: задача превращается в короткий product spec, чек-лист разработки и acceptance criteria без тяжелой CRM.</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="resetBtn">Сбросить демо</button>
+          <button class="btn primary" type="button" id="newTaskBtn">Новая задача</button>
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="Фильтры задач">
+        <input class="search" id="searchInput" type="search" placeholder="Поиск по названию, описанию или владельцу">
+        <select class="select" id="priorityFilter" aria-label="Фильтр приоритета">
+          <option value="all">Все приоритеты</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <div class="segmented" aria-label="Вид задач">
+          <button type="button" class="active" data-view="all">Все</button>
+          <button type="button" data-view="ai">AI spec</button>
+          <button type="button" data-view="release">Release</button>
+        </div>
+      </section>
+
+      <div class="workspace">
+        <section class="board" id="board" aria-label="Доска задач"></section>
+
+        <aside class="inspector" aria-label="Product spec">
+          <h2 id="inspectorTitle">Выберите задачу</h2>
+          <p id="inspectorDesc">Клик по карточке покажет spec, чек-лист и acceptance criteria. Все изменения сохраняются в localStorage.</p>
+          <div class="spec-box">
+            <h3>Product spec</h3>
+            <ul id="specList">
+              <li>Сформулируйте пользовательскую проблему.</li>
+              <li>Опишите ожидаемое поведение продукта.</li>
+              <li>Проверьте критерии приемки перед релизом.</li>
+            </ul>
+          </div>
+          <div class="spec-box">
+            <h3>Dev checklist</h3>
+            <ul id="checkList">
+              <li>UI состояние пустого списка.</li>
+              <li>Состояние ошибки и загрузки.</li>
+              <li>Мобильная проверка.</li>
+            </ul>
+          </div>
+          <div class="spec-box">
+            <h3>Acceptance criteria</h3>
+            <ul id="criteriaList">
+              <li>Пользователь понимает следующий шаг.</li>
+              <li>Ключевой сценарий завершается без ручных обходов.</li>
+              <li>Регрессия не ломает релизный поток.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div class="drawer" id="taskDrawer" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modalTitle">Новая задача</h2>
+        <button class="icon-btn" type="button" id="closeDrawer" aria-label="Закрыть">x</button>
+      </div>
+      <form id="taskForm">
+        <input type="hidden" id="taskId">
+        <div class="form-grid">
+          <div class="field wide">
+            <label for="taskTitle">Название</label>
+            <input class="input" id="taskTitle" required maxlength="90" placeholder="Например: быстрый spec из issue">
+          </div>
+          <div class="field wide">
+            <label for="taskDesc">Описание</label>
+            <textarea id="taskDesc" required maxlength="360" placeholder="Что нужно сделать и зачем команде это сейчас"></textarea>
+          </div>
+          <div class="field">
+            <label for="taskOwner">Владелец</label>
+            <input class="input" id="taskOwner" maxlength="32" placeholder="Product">
+          </div>
+          <div class="field">
+            <label for="taskDue">Срок</label>
+            <input class="input" id="taskDue" type="date">
+          </div>
+          <div class="field">
+            <label for="taskPriority">Приоритет</label>
+            <select class="input" id="taskPriority">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="taskStatus">Статус</label>
+            <select class="input" id="taskStatus">
+              <option value="todo">Backlog</option>
+              <option value="spec">Spec</option>
+              <option value="build">Build</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="field wide">
+            <label for="taskTags">Теги через запятую</label>
+            <input class="input" id="taskTags" maxlength="90" placeholder="release, billing, onboarding">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn danger" type="button" id="deleteTaskBtn">Удалить</button>
+          <div class="actions">
+            <button class="btn" type="button" id="aiSpecBtn">Собрать AI spec</button>
+            <button class="btn primary" type="submit">Сохранить</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "minitasktrack.board.v1";
+    const columns = [
+      { id: "todo", title: "Backlog", dot: "todo" },
+      { id: "spec", title: "Spec", dot: "spec" },
+      { id: "build", title: "Build", dot: "build" },
+      { id: "done", title: "Done", dot: "done" }
+    ];
+
+    const seedTasks = [
+      {
+        id: crypto.randomUUID(),
+        title: "Собрать product spec из сырой задачи",
+        desc: "При вставке короткого issue сервис должен предложить problem statement, scope и acceptance criteria.",
+        owner: "Product",
+        due: "2026-07-08",
+        priority: "high",
+        status: "spec",
+        tags: ["ai spec", "core"],
+        spec: ["Пользователь вставляет хаотичное описание задачи.", "Система возвращает короткий spec с проблемой, решением и scope.", "Команда может отредактировать результат перед передачей в разработку."],
+        checklist: ["Состояние пустого ввода", "Генерация structured spec", "Редактирование результата", "Сохранение версии"],
+        criteria: ["Spec содержит problem, solution, out of scope.", "Acceptance criteria не меньше трех пунктов.", "Результат можно скопировать без потери форматирования."]
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Release checklist перед выкладкой",
+        desc: "Тимлид видит короткий список проверок по задачам релиза и статус блокеров.",
+        owner: "Lead",
+        due: "2026-07-11",
+        priority: "medium",
+        status: "build",
+        tags: ["release", "qa"],
+        spec: ["Команда выбирает задачи релиза.", "Система показывает незакрытые критерии и риски.", "Перед публикацией виден общий readiness score."],
+        checklist: ["Счетчик блокеров", "Список done/spec/build", "Экспорт check-list"],
+        criteria: ["High priority задачи не теряются.", "Done задачи не требуют ручной перепроверки статуса.", "Readiness обновляется после перетаскивания карточек."]
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Мини-форма добавления задачи",
+        desc: "Быстрое создание карточки без обязательных полей из тяжелого enterprise-трекера.",
+        owner: "Founder",
+        due: "2026-07-05",
+        priority: "low",
+        status: "todo",
+        tags: ["ux"],
+        spec: ["Пользователь нажимает Новая задача.", "Заполняет название и короткое описание.", "Карточка появляется в выбранной колонке."],
+        checklist: ["Валидация title", "Дата необязательна", "LocalStorage save"],
+        criteria: ["Новая карточка появляется без перезагрузки.", "После обновления страницы задача остается на доске.", "Мобильная форма не выходит за экран."]
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Проверка мобильной доски",
+        desc: "На телефоне колонки должны читаться вертикально, без горизонтального хаоса и обрезанных кнопок.",
+        owner: "Design",
+        due: "2026-07-06",
+        priority: "medium",
+        status: "done",
+        tags: ["mobile", "ux"],
+        spec: ["Мобильный пользователь видит заголовок, фильтр и колонки.", "Карточки не ломают ширину экрана.", "Основные действия доступны пальцем."],
+        checklist: ["Viewport 390px", "Проверка длинных слов", "Кнопки минимум 36px"],
+        criteria: ["Нет горизонтального overflow на body.", "Форма редактирования помещается в экран.", "Фильтры остаются понятными."]
+      }
+    ];
+
+    let tasks = loadTasks();
+    let activeTaskId = tasks[0]?.id || null;
+    let currentView = "all";
+
+    const board = document.getElementById("board");
+    const drawer = document.getElementById("taskDrawer");
+    const form = document.getElementById("taskForm");
+    const searchInput = document.getElementById("searchInput");
+    const priorityFilter = document.getElementById("priorityFilter");
+    const toast = document.getElementById("toast");
+
+    function loadTasks() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return Array.isArray(stored) && stored.length ? stored : seedTasks;
+      } catch {
+        return seedTasks;
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    function normalizeText(value) {
+      return String(value || "").toLowerCase().trim();
+    }
+
+    function filteredTasks() {
+      const term = normalizeText(searchInput.value);
+      const priority = priorityFilter.value;
+      return tasks.filter(task => {
+        const matchesSearch = !term || [task.title, task.desc, task.owner, ...(task.tags || [])].some(value => normalizeText(value).includes(term));
+        const matchesPriority = priority === "all" || task.priority === priority;
+        const matchesView = currentView === "all" || (currentView === "ai" && (task.tags || []).some(tag => normalizeText(tag).includes("ai"))) || (currentView === "release" && (task.tags || []).some(tag => normalizeText(tag).includes("release")));
+        return matchesSearch && matchesPriority && matchesView;
+      });
+    }
+
+    function renderBoard() {
+      const visible = filteredTasks();
+      board.innerHTML = columns.map(column => {
+        const columnTasks = visible.filter(task => task.status === column.id);
+        const cards = columnTasks.map(renderTask).join("");
+        return `
+          <section class="column" data-column="${column.id}">
+            <div class="column-head">
+              <div class="column-title"><span class="dot ${column.dot}"></span>${column.title}</div>
+              <span class="column-count">${columnTasks.length}</span>
+            </div>
+            <div class="task-list" data-list="${column.id}">
+              ${cards || `<div class="empty">Нет задач</div>`}
+            </div>
+          </section>
+        `;
+      }).join("");
+
+      attachDragHandlers();
+      updateStats();
+      renderInspector();
+    }
+
+    function renderTask(task) {
+      const due = task.due ? new Date(task.due + "T00:00:00").toLocaleDateString("ru-RU", { day: "2-digit", month: "short" }) : "Без срока";
+      const tags = (task.tags || []).slice(0, 3).map(tag => `<span class="chip ${normalizeText(tag).includes("ai") ? "ai" : ""}">${escapeHtml(tag)}</span>`).join("");
+      return `
+        <article class="task" draggable="true" data-task-id="${task.id}" tabindex="0">
+          <div class="task-top">
+            <h3 class="task-title">${escapeHtml(task.title)}</h3>
+            <button class="task-menu" type="button" data-edit="${task.id}" aria-label="Редактировать">...</button>
+          </div>
+          <p class="task-desc">${escapeHtml(task.desc)}</p>
+          <div class="chips">
+            <span class="chip ${task.priority}">${task.priority}</span>
+            ${tags}
+          </div>
+          <div class="task-meta">
+            <div class="meta-box"><span>Owner</span><strong>${escapeHtml(task.owner || "Team")}</strong></div>
+            <div class="meta-box"><span>Due</span><strong>${due}</strong></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderInspector() {
+      const task = tasks.find(item => item.id === activeTaskId) || tasks[0];
+      if (!task) return;
+      activeTaskId = task.id;
+      document.getElementById("inspectorTitle").textContent = task.title;
+      document.getElementById("inspectorDesc").textContent = task.desc;
+      renderList("specList", task.spec);
+      renderList("checkList", task.checklist);
+      renderList("criteriaList", task.criteria);
+    }
+
+    function renderList(id, values) {
+      document.getElementById(id).innerHTML = (values || []).map(value => `<li>${escapeHtml(value)}</li>`).join("");
+    }
+
+    function updateStats() {
+      const done = tasks.filter(task => task.status === "done").length;
+      const ready = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+      document.getElementById("allCount").textContent = tasks.length;
+      document.getElementById("specCountNav").textContent = tasks.filter(task => task.status === "spec").length;
+      document.getElementById("releaseCount").textContent = tasks.filter(task => (task.tags || []).some(tag => normalizeText(tag).includes("release"))).length;
+      document.getElementById("readyPercent").textContent = ready + "%";
+      document.getElementById("buildCount").textContent = tasks.filter(task => task.status === "build").length;
+      document.getElementById("highCount").textContent = tasks.filter(task => task.priority === "high").length;
+    }
+
+    function openDrawer(task = null) {
+      const isEdit = Boolean(task);
+      document.getElementById("modalTitle").textContent = isEdit ? "Редактировать задачу" : "Новая задача";
+      document.getElementById("deleteTaskBtn").style.visibility = isEdit ? "visible" : "hidden";
+      document.getElementById("taskId").value = task?.id || "";
+      document.getElementById("taskTitle").value = task?.title || "";
+      document.getElementById("taskDesc").value = task?.desc || "";
+      document.getElementById("taskOwner").value = task?.owner || "";
+      document.getElementById("taskDue").value = task?.due || "";
+      document.getElementById("taskPriority").value = task?.priority || "medium";
+      document.getElementById("taskStatus").value = task?.status || "todo";
+      document.getElementById("taskTags").value = (task?.tags || []).join(", ");
+      drawer.classList.add("open");
+      document.getElementById("taskTitle").focus();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("open");
+      form.reset();
+    }
+
+    function taskFromForm(existing = {}) {
+      const title = document.getElementById("taskTitle").value.trim();
+      const desc = document.getElementById("taskDesc").value.trim();
+      const tags = document.getElementById("taskTags").value.split(",").map(tag => tag.trim()).filter(Boolean);
+      const generated = generateSpec(title, desc);
+      return {
+        ...existing,
+        id: existing.id || crypto.randomUUID(),
+        title,
+        desc,
+        owner: document.getElementById("taskOwner").value.trim() || "Team",
+        due: document.getElementById("taskDue").value,
+        priority: document.getElementById("taskPriority").value,
+        status: document.getElementById("taskStatus").value,
+        tags,
+        spec: existing.spec || generated.spec,
+        checklist: existing.checklist || generated.checklist,
+        criteria: existing.criteria || generated.criteria
+      };
+    }
+
+    function generateSpec(title, desc) {
+      const subject = title || "задача";
+      const reason = desc || "команда должна быстро понять объем работы";
+      return {
+        spec: [
+          `Проблема: ${reason}`,
+          `Решение: реализовать поток "${subject}" с понятным началом и завершением.`,
+          "Ограничение: оставить сценарий легким для маленькой команды."
+        ],
+        checklist: [
+          "Описать основное состояние UI",
+          "Добавить empty/error/loading состояния",
+          "Проверить мобильный сценарий",
+          "Обновить критерии перед релизом"
+        ],
+        criteria: [
+          "Пользователь видит результат без дополнительных объяснений.",
+          "Данные не теряются после обновления страницы.",
+          "Задачу можно перевести в Done только после проверки ключевого сценария."
+        ]
+      };
+    }
+
+    function attachDragHandlers() {
+      document.querySelectorAll(".task").forEach(card => {
+        card.addEventListener("click", event => {
+          const editId = event.target.closest("[data-edit]")?.dataset.edit;
+          if (editId) {
+            openDrawer(tasks.find(task => task.id === editId));
+            return;
+          }
+          activeTaskId = card.dataset.taskId;
+          renderInspector();
+        });
+        card.addEventListener("keydown", event => {
+          if (event.key === "Enter") {
+            activeTaskId = card.dataset.taskId;
+            renderInspector();
+          }
+        });
+        card.addEventListener("dragstart", event => {
+          card.classList.add("dragging");
+          event.dataTransfer.setData("text/plain", card.dataset.taskId);
+        });
+        card.addEventListener("dragend", () => card.classList.remove("dragging"));
+      });
+
+      document.querySelectorAll(".column").forEach(column => {
+        column.addEventListener("dragover", event => {
+          event.preventDefault();
+          column.classList.add("drag-over");
+        });
+        column.addEventListener("dragleave", () => column.classList.remove("drag-over"));
+        column.addEventListener("drop", event => {
+          event.preventDefault();
+          column.classList.remove("drag-over");
+          const id = event.dataTransfer.getData("text/plain");
+          const task = tasks.find(item => item.id === id);
+          if (!task) return;
+          task.status = column.dataset.column;
+          saveTasks();
+          activeTaskId = id;
+          renderBoard();
+          showToast("Статус обновлен");
+        });
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value || "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    document.getElementById("newTaskBtn").addEventListener("click", () => openDrawer());
+    document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+    drawer.addEventListener("click", event => {
+      if (event.target === drawer) closeDrawer();
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const id = document.getElementById("taskId").value;
+      if (id) {
+        const index = tasks.findIndex(task => task.id === id);
+        tasks[index] = taskFromForm(tasks[index]);
+        activeTaskId = id;
+        showToast("Задача сохранена");
+      } else {
+        const task = taskFromForm();
+        tasks.unshift(task);
+        activeTaskId = task.id;
+        showToast("Задача добавлена");
+      }
+      saveTasks();
+      closeDrawer();
+      renderBoard();
+    });
+
+    document.getElementById("deleteTaskBtn").addEventListener("click", () => {
+      const id = document.getElementById("taskId").value;
+      tasks = tasks.filter(task => task.id !== id);
+      activeTaskId = tasks[0]?.id || null;
+      saveTasks();
+      closeDrawer();
+      renderBoard();
+      showToast("Задача удалена");
+    });
+
+    document.getElementById("aiSpecBtn").addEventListener("click", () => {
+      const id = document.getElementById("taskId").value;
+      const generated = generateSpec(document.getElementById("taskTitle").value.trim(), document.getElementById("taskDesc").value.trim());
+      if (id) {
+        const task = tasks.find(item => item.id === id);
+        Object.assign(task, generated);
+        saveTasks();
+        renderBoard();
+      }
+      showToast("Spec собран");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      tasks = structuredClone(seedTasks);
+      activeTaskId = tasks[0]?.id || null;
+      saveTasks();
+      renderBoard();
+      showToast("Демо восстановлено");
+    });
+
+    document.querySelectorAll(".segmented button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".segmented button").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        currentView = button.dataset.view;
+        renderBoard();
+      });
+    });
+
+    document.getElementById("quickSpecNav").addEventListener("click", () => {
+      currentView = "ai";
+      document.querySelector('[data-view="ai"]').click();
+    });
+
+    document.getElementById("releaseNav").addEventListener("click", () => {
+      currentView = "release";
+      document.querySelector('[data-view="release"]').click();
+    });
+
+    searchInput.addEventListener("input", renderBoard);
+    priorityFilter.addEventListener("change", renderBoard);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+    });
+
+    renderBoard();
+  </script>
+</body>
+</html>
